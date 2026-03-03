@@ -1,63 +1,47 @@
 "use server";
-import { connect } from "@/app/lib/dbConnect";
+
+import { dbConnect } from "@/app/lib/dbConnect";
 import bcrypt from "bcryptjs";
+
 export const postUser = async (payload) => {
   try {
-    const { email, password, name, photo } = payload;
+    console.log("Payload received:", payload);
 
-    if (!email || !password) {
-      return {
-        success: false,
-        message: "Email and password required",
-      };
-    }
-
-    const collection = await connect("users");
-
-    //Check existing user properly
-    const isUserExist = await collection.findOne({
-      email: email.toLowerCase(),
+    // Check if user already exists
+    const existUser = await dbConnect("users").findOne({
+      email: payload.email.toLowerCase(),
     });
-    if (isUserExist) {
+
+    if (existUser) {
       return {
         success: false,
         message: "User already exists",
       };
     }
 
-    //Hash password
-    const hashPassword = await bcrypt.hash(password, 10);
+    // Hash password
+    const hashPassword = await bcrypt.hash(payload.password, 10);
+    console.log(hashPassword);
+
+    // Prepare new user object
     const newUser = {
-      name: name || "",
-      email: email.toLowerCase(),
-      photo: photo || "",
-      role: "user",
+      name: payload.name,
+      email: payload.email.toLowerCase(),
       password: hashPassword,
-      createdAt: new Date(),
+      image: payload.image || null, // optional base64 image
+      role: "user",
+      createdAt: new Date().toISOString(),
     };
-    const result = await collection.insertOne(newUser);
+
+    // Insert into MongoDB
+    const result = await dbConnect("users").insertOne(newUser);
     if (result.acknowledged) {
       return {
         success: true,
-        message: `User created with ID ${result.insertedId}`,
+        message: `User Created with ${result.insertedId.toString()}`,
       };
     }
-    return {
-      success: false,
-      message: "User creation failed",
-    };
   } catch (error) {
-    console.error("Register Error:", error);
-
-    if (error.code === 11000) {
-      return {
-        success: false,
-        message: "Email already registered",
-      };
-    }
-    return {
-      success: false,
-      message: "Something went wrong",
-    };
+    console.error("Server error:", error);
   }
 };

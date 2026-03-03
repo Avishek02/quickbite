@@ -1,18 +1,34 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // ✅ Icons import
 
 export default function LoginPage() {
+  const { status } = useSession();
   const router = useRouter();
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  // If already logged in → redirect home
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.push("/");
+    }
+  }, [status, router]);
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
 
     const form = e.target;
     const email = form.email.value.trim();
@@ -47,6 +63,7 @@ export default function LoginPage() {
       redirect: false,
       email,
       password,
+      redirect: false,
     });
 
     if (result?.error) {
@@ -78,7 +95,6 @@ export default function LoginPage() {
           <div>
             <label className="block text-sm font-medium mb-1">Email</label>
             <input
-              name="email"
               type="email"
               placeholder="Enter your email"
               className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 ${
@@ -119,15 +135,36 @@ export default function LoginPage() {
             )}
           </div>
 
+          <div className="text-right">
+            <Link
+              href="/forgot-Password"
+              className="text-sm text-blue-500 hover:underline"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md transition cursor-pointer"
+            disabled={loading}
+            className="w-full px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors cursor-pointer"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <p className="text-sm text-gray-500 mt-4 text-center cursor-pointer">
+        {/* Divider */}
+        <div className="my-6 flex items-center">
+          <div className="flex-grow border-t"></div>
+          <span className="mx-3 text-sm text-gray-500">OR</span>
+          <div className="flex-grow border-t"></div>
+        </div>
+
+        <SocialLogin />
+
+        <p className="text-sm text-gray-500 mt-6 text-center">
           Don’t have an account?{" "}
           <a href="/register" className="text-blue-500 underline">
             Register

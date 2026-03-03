@@ -1,7 +1,9 @@
-import { connect } from "@/app/lib/dbConnect";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import bcrypt from "bcryptjs";
+import { dbConnect } from "@/app/lib/dbConnect";
 
 export const authOptions = {
   session: {
@@ -11,50 +13,53 @@ export const authOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
+      credentials: {
+        email: {},
+        password: {},
+      },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing email or password");
-        }
-
-        const collection = await connect("users");
-
-        const user = await collection.findOne({
-          email: credentials.email.toLowerCase(),
+        const user = await dbConnect("users").findOne({
+          email: credentials.email,
         });
 
         if (!user) {
           throw new Error("User not found");
         }
 
-        const isPasswordValid = await bcrypt.compare(
+        const isValidPassword = await bcrypt.compare(
           credentials.password,
           user.password,
         );
 
-        if (!isPasswordValid) {
+        if (!isValidPassword) {
           throw new Error("Invalid password");
         }
 
-        //Return only safe data
         return {
           id: user._id.toString(),
-          name: user.name || "",
+          name: user.name,
           email: user.email,
-          role: user.role || "user",
-          image: user.photo || null,
+          image: user.image || null,
         };
       },
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
 
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role;
         token.id = user.id;
-        token.image = user.image;
         token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
       }
       return token;
     },
@@ -62,19 +67,17 @@ export const authOptions = {
     async session({ session, token }) {
       if (token) {
         session.user.id = token.id;
-        session.user.role = token.role;
-        session.user.image = token.image;
         session.user.name = token.name;
+        session.user.email = token.email;
+        session.user.image = token.image;
       }
       return session;
     },
   },
 
-  pages: {
-    signIn: "/login",
-  },
-
   secret: process.env.NEXTAUTH_SECRET,
 };
+
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

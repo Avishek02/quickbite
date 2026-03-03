@@ -1,6 +1,8 @@
 "use client";
 
 import { postUser } from "@/actions/server/auth";
+import SocialLogin from "@/components/SocialLogin";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Swal from "sweetalert2";
@@ -85,6 +87,7 @@ export default function RegisterPage() {
         confirmButtonColor: "#f97316",
       });
     }
+    router.push("/login");
   };
 
   return (
@@ -151,13 +154,21 @@ export default function RegisterPage() {
 
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md transition cursor-pointer"
+            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md cursor-pointer"
           >
             Register
           </button>
         </form>
+        {/* Divider */}
+        <div className="my-6 flex items-center">
+          <div className="flex-grow border-t"></div>
+          <span className="mx-3 text-sm text-gray-500">OR</span>
+          <div className="flex-grow border-t"></div>
+        </div>
 
-        <p className="text-sm text-gray-500 mt-4 text-center cursor-pointer">
+        <SocialLogin></SocialLogin>
+
+        <p className="text-sm text-gray-500 mt-6 text-center">
           Already have an account?{" "}
           <a href="/login" className="text-blue-500 underline">
             Login
