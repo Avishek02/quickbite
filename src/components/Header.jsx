@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import {
   MapPin,
   ShoppingCart,
-  Search,
   Bike,
   Store,
   Menu,
@@ -16,13 +15,15 @@ import {
   LogOut,
   ChevronDown,
 } from "lucide-react";
+import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { MdOutlineDeliveryDining, MdOutlineShoppingBag } from "react-icons/md";
 import Language from "./Language";
 import Link from "next/link";
-import Image from "next/image";
-import AuthButton from "./AuthButton";
+import { useRouter } from "next/navigation";
+import InputSearch from "./InputSearch";
 
 const Header = () => {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { data: session, status } = useSession();
@@ -33,6 +34,7 @@ const Header = () => {
       <div className="max-w-[1380px] mx-auto py-3 flex items-center justify-between px-4">
         {/* Left */}
         <div className="flex items-center gap-4 md:gap-6">
+          {/* Hamburger Menu for Mobile */}
           <div className="lg:hidden">
             <Menu
               onClick={() => setOpen(true)}
@@ -40,6 +42,7 @@ const Header = () => {
             />
           </div>
 
+          {/* Logo */}
           <Link
             href="/"
             className="text-orange-500 font-bold text-xl sm:text-2xl cursor-pointer"
@@ -49,18 +52,22 @@ const Header = () => {
         </div>
 
         {/* Address Desktop */}
-        <div className="hidden lg:flex items-center gap-2 text-gray-900 text-sm hover:bg-gray-100 px-3 py-2 rounded-xl cursor-pointer max-w-[400px] truncate">
+        <a
+          href="https://www.google.com/maps/search/?api=1&query=New+Address+Road+71,+Dhaka,+Bangladesh"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden lg:flex items-center gap-2 text-gray-900 text-sm hover:bg-gray-100 px-3 py-2 rounded-xl cursor-pointer max-w-[400px] truncate"
+        >
           <MapPin className="w-4 h-4" />
           <span className="truncate">
             New Address Road 71, Dhaka, Bangladesh
           </span>
-        </div>
+        </a>
 
-        {/* Right */}
+        {/* Right Section */}
         <div className="flex items-center gap-4 relative">
           {status === "authenticated" && session?.user ? (
             <div className="relative">
-              {/* Profile Pic + Arrow */}
               <div
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-2 cursor-pointer"
@@ -79,12 +86,6 @@ const Header = () => {
                 />
               </div>
 
-              {/* Hover Tooltip (Same as before) */}
-              <div className="absolute top-12 right-0 opacity-0 group-hover:opacity-100 transition duration-200 bg-black text-white text-xs px-3 py-1 rounded-md whitespace-nowrap z-50">
-                {session.user.name || "User"}
-              </div>
-
-              {/* Dropdown */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-lg border z-50">
                   <Link
@@ -94,7 +95,14 @@ const Header = () => {
                   >
                     <User className="w-4 h-4" /> Profile
                   </Link>
-
+                  <Link
+                    href="/dashboard/admin"
+                    onClick={() => setDropdownOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
+                  >
+                    <MdOutlineDashboardCustomize className="w-4 h-4" />{" "}
+                    Dashboard
+                  </Link>
                   <Link
                     href="/orders"
                     onClick={() => setDropdownOpen(false)}
@@ -102,7 +110,6 @@ const Header = () => {
                   >
                     <Package className="w-4 h-4" /> Orders
                   </Link>
-
                   <Link
                     href="/vouchers"
                     onClick={() => setDropdownOpen(false)}
@@ -110,7 +117,6 @@ const Header = () => {
                   >
                     <Ticket className="w-4 h-4" /> Vouchers
                   </Link>
-
                   <button
                     onClick={() => signOut({ callbackUrl: "/" })}
                     className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 cursor-pointer"
@@ -148,7 +154,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Bottom Navbar (UNCHANGED) */}
+      {/* Bottom Navbar */}
       <div className="max-w-[1380px] mx-auto py-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 px-4">
         <div className="hidden lg:flex items-center gap-8 text-gray-700 text-sm">
           <Link
@@ -177,17 +183,27 @@ const Header = () => {
           </Link>
         </div>
 
-        <div className="relative w-full lg:w-[400px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search for restaurants, cuisines, and dishes"
-            className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm"
-          />
-        </div>
+        {/* <div className="relative w-full lg:w-[400px]">
+          <form onSubmit={handleSubmit} className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              name="search"
+              type="text"
+              placeholder="Search for restaurants, cuisines, and dishes"
+              className="w-full pl-10 pr-24 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm"
+            />
+            <button
+              type="submit"
+              className="absolute right-1 top-1/2 -translate-y-1/2 bg-orange-500 text-white px-4 py-1.5 rounded-full text-sm hover:bg-orange-600 transition"
+            >
+              Search
+            </button>
+          </form>
+        </div> */}
+        <InputSearch></InputSearch>
       </div>
 
-      {/* Mobile Drawer (UNCHANGED) */}
+      {/* Mobile Drawer */}
       {open && (
         <div
           className="fixed inset-0 z-50 bg-black/40"
@@ -197,7 +213,89 @@ const Header = () => {
             className="w-72 h-full bg-white shadow-lg p-5"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* SAME MOBILE CODE */}
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="font-semibold text-lg">Menu</h2>
+              <X
+                onClick={() => setOpen(false)}
+                className="w-5 h-5 cursor-pointer"
+              />
+            </div>
+
+            <nav className="flex flex-col gap-4">
+              <Link
+                href="/"
+                onClick={() => setOpen(false)}
+                className="text-gray-700 hover:text-orange-500"
+              >
+                Home
+              </Link>
+              <Link
+                href="/pick-up"
+                onClick={() => setOpen(false)}
+                className="text-gray-700 hover:text-orange-500"
+              >
+                Pick-up
+              </Link>
+              <Link
+                href="/pandamart"
+                onClick={() => setOpen(false)}
+                className="text-gray-700 hover:text-orange-500"
+              >
+                Pandamart
+              </Link>
+              <Link
+                href="/shops"
+                onClick={() => setOpen(false)}
+                className="text-gray-700 hover:text-orange-500"
+              >
+                Shops
+              </Link>
+
+              {status === "authenticated" && session?.user ? (
+                <>
+                  <Link
+                    href="/profile"
+                    onClick={() => setOpen(false)}
+                    className="text-gray-700 hover:text-orange-500"
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href="/orders"
+                    onClick={() => setOpen(false)}
+                    className="text-gray-700 hover:text-orange-500"
+                  >
+                    Orders
+                  </Link>
+                  <button
+                    onClick={() => {
+                      signOut({ callbackUrl: "/" });
+                      setOpen(false);
+                    }}
+                    className="text-red-500 hover:text-red-600 text-left"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    onClick={() => setOpen(false)}
+                    className="text-gray-700 hover:text-orange-500"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    href="/register"
+                    onClick={() => setOpen(false)}
+                    className="text-gray-700 hover:text-orange-500"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
+            </nav>
           </div>
         </div>
       )}

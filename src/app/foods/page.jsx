@@ -1,29 +1,35 @@
 "use client";
 import CategoriesFoods from "@/components/CategoriesFoods";
 import FoodCards from "@/components/FoodCards";
-import HeroSection from "@/components/HeroSection";
 import React, { useState, useEffect } from "react";
+import HeroSection from "@/components/HeroSection";
+// import InputSearch from "@/components/InputSearch";
+import { useSearchParams } from "next/navigation";
+import OrderHistoryCard from "@/components/orders/OrderHistoryCard";
 
-const getFoods = async () => {
-  // FIXED: Changed absolute localhost URL to relative path for safe deployment
-  const res = await fetch("/api/foods");
+const getFoods = async (search = "") => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/feedback?search=${search}`,
+  );
   const data = await res.json();
   return data || [];
 };
 
 const FoodsPage = () => {
+  const searchParams = useSearchParams();
+  const search = searchParams.get("search") || "";
   const [foods, setFoods] = useState([]);
   const [selectedSort, setSelectedSort] = useState("");
   const [selectedOffer, setSelectedOffer] = useState("");
-  console.log("foods get", foods);
 
   useEffect(() => {
     const loadFoods = async () => {
-      const data = await getFoods();
+      const data = await getFoods(search || "");
+      console.log("Fetched foods:", data);
       setFoods(data);
     };
     loadFoods();
-  }, []);
+  }, [search]);
 
   const sortOptions = [
     "Relevance",
@@ -64,11 +70,11 @@ const FoodsPage = () => {
               >
                 <div
                   className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition
-                  ${
-                    selectedSort === option
-                      ? "bg-black border-black"
-                      : "border-gray-400"
-                  }`}
+                    ${
+                      selectedSort === option
+                        ? "bg-black border-black"
+                        : "border-gray-400"
+                    }`}
                 >
                   {selectedSort === option && (
                     <div className="w-2 h-2 bg-white rounded-sm"></div>
@@ -96,11 +102,11 @@ const FoodsPage = () => {
               >
                 <div
                   className={`w-5 h-5 rounded-md border-2 flex items-center justify-center transition
-                  ${
-                    selectedOffer === option
-                      ? "bg-black border-black"
-                      : "border-gray-400"
-                  }`}
+                    ${
+                      selectedOffer === option
+                        ? "bg-black border-black"
+                        : "border-gray-400"
+                    }`}
                 >
                   {selectedOffer === option && (
                     <div className="w-2 h-2 bg-white rounded-sm"></div>
@@ -119,7 +125,8 @@ const FoodsPage = () => {
 
       {/* Product section for the right side*/}
       <div className="col-span-9 overflow-y-auto px-6">
-        <HeroSection />
+        <OrderHistoryCard></OrderHistoryCard>
+        <HeroSection></HeroSection>
         <CategoriesFoods></CategoriesFoods>
 
         <h2 className="font-bold text-2xl mt-10 mb-5">
@@ -128,7 +135,7 @@ const FoodsPage = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 pb-20">
           {foods.map((food) => (
-            <FoodCards key={food.id} food={food} />
+            <FoodCards key={food._id} food={food} />
           ))}
         </div>
       </div>
