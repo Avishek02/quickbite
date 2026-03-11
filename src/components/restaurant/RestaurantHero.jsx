@@ -1,19 +1,24 @@
+"use client";
+
 import React from "react";
 import { Star, Info, Bike, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageProvider";
 // import Image from "next/image";
 
 const RestaurantHero = ({ foodImg, title }) => {
+  const { language } = useLanguage();
+
   return (
     <div className="max-w-[1380px] mx-auto">
       {/* Breadcrumbs */}
       <nav className="text-sm text-gray-500 py-4 flex items-center gap-2 pb-4 ">
         <span className="text-secondary font-medium hover:text-primary cursor-pointer underline underline-offset-4">
-          Dhaka
+          {language === "bn" ? "ঢাকা" : "Dhaka"}
         </span>
         <span>&gt;</span>
         <span className="text-secondary font-medium hover:text-primary cursor-pointer underline underline-offset-4">
-          Restaurant List
+          {language === "bn" ? "রেস্টুরেন্ট তালিকা" : "Restaurant List"}
         </span>
         <span>&gt;</span>
         <span className="text-secondary font-medium">{title}</span>
@@ -34,7 +39,9 @@ const RestaurantHero = ({ foodImg, title }) => {
         {/* Restaurant Details */}
         <div className="flex-1 w-full">
           <p className="text-xs text-gray-500 mb-1">
-            Asian • Indian • Rice Dishes • Biryani
+            {language === "bn"
+              ? "এশিয়ান • ইন্ডিয়ান • ভাতের পদ • বিরিয়ানি"
+              : "Asian • Indian • Rice Dishes • Biryani"}
           </p>
 
           <div className="flex justify-between items-start gap-4 mt-3">
@@ -49,19 +56,24 @@ const RestaurantHero = ({ foodImg, title }) => {
               className="flex items-center gap-1 bg-red-50 text-error px-2 py-1 rounded-md text-sm font-bold"
             >
               <ShoppingBag size={14} />
-              Super Restaurant
+              {language === "bn" ? "সুপার রেস্টুরেন্ট" : "Super Restaurant"}
             </Link>
 
             <div className="flex items-center gap-1 text-sm font-medium">
               <Bike size={18} className="text-primary" />
               <span className="text-primary">
-                Free delivery for first order
+                {language === "bn"
+                  ? "প্রথম অর্ডারে ফ্রি ডেলিভারি"
+                  : "Free delivery for first order"}
               </span>
-              <span className="text-gray-400 line-through ml-1">Tk 40</span>
+              <span className="text-gray-400 line-through ml-1">
+                {language === "bn" ? "৳৪০" : "Tk 40"}
+              </span>
             </div>
 
             <div className="text-sm text-secondary font-medium">
-              • Min. order Tk 50
+              •{" "}
+              {language === "bn" ? "সর্বনিম্ন অর্ডার ৳৫০" : "Min. order Tk 50"}
             </div>
           </div>
 
@@ -73,13 +85,15 @@ const RestaurantHero = ({ foodImg, title }) => {
                 <Star size={18} className="text-primary fill-primary" />
                 <span className="font-bold text-secondary">4.1/5</span>
                 <span className="text-gray-400 text-sm">
-                  (1000+) See reviews
+                  {language === "bn"
+                    ? "(১০০০+) রিভিউ দেখুন"
+                    : "(1000+) See reviews"}
                 </span>
               </div>
 
               <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold">
                 <Info size={18} className="text-primary" />
-                <span>More info</span>
+                <span>{language === "bn" ? "আরও তথ্য" : "More info"}</span>
               </div>
             </div>
           </div>
@@ -89,14 +103,21 @@ const RestaurantHero = ({ foodImg, title }) => {
       {/* horizontal line */}
       <div className="border-t border-gray-200 my-4 "></div>
 
-      <h2 className="font-bold text-2xl">Abailable deals</h2>
+      <h2 className="font-bold text-2xl">
+        {language === "bn" ? "উপলব্ধ অফার" : "Available deals"}
+      </h2>
+
       <div className="flex flex-col md:flex-row gap-4 md:w-[700px] mt-5 mb-10">
-        {/* Card 1: App-only deals */}
+        {/* Card 1 */}
         <div className="flex-1 bg-gray-800 text-white rounded-xl p-6 flex items-center gap-4 shadow-md hover:shadow-xl transition">
           <div className="flex-1">
-            <h3 className="font-bold text-lg mb-1">App-only deals</h3>
+            <h3 className="font-bold text-lg mb-1">
+              {language === "bn" ? "শুধু অ্যাপ অফার" : "App-only deals"}
+            </h3>
             <p className="text-gray-300 text-sm">
-              Download the app to unlock more discounts
+              {language === "bn"
+                ? "আরও ডিসকাউন্ট পেতে অ্যাপ ডাউনলোড করুন"
+                : "Download the app to unlock more discounts"}
             </p>
           </div>
           <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center opacity-40">
@@ -117,12 +138,16 @@ const RestaurantHero = ({ foodImg, title }) => {
           </div>
         </div>
 
-        {/* Card 2: 15% off */}
+        {/* Card 2 */}
         <div className="flex-1 bg-pink-100 text-pink-700 rounded-xl p-6 flex items-center gap-4 shadow-md hover:shadow-xl transition">
           <div className="flex-1">
-            <h3 className="font-bold text-lg mb-1">15% off</h3>
+            <h3 className="font-bold text-lg mb-1">
+              {language === "bn" ? "১৫% ছাড়" : "15% off"}
+            </h3>
             <p className="text-pink-600 text-sm">
-              Min. order Tk 50. Valid for all items. Auto applied.
+              {language === "bn"
+                ? "সর্বনিম্ন অর্ডার ৳৫০। সব আইটেমে প্রযোজ্য। স্বয়ংক্রিয়ভাবে প্রয়োগ হবে।"
+                : "Min. order Tk 50. Valid for all items. Auto applied."}
             </p>
           </div>
           <div className=" h-10 bg-pink-200 rounded-full flex items-center justify-center opacity-40">

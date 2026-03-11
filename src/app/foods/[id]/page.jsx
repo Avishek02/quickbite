@@ -5,7 +5,7 @@ import RestaurantHero from "@/components/restaurant/RestaurantHero";
 import { useParams } from "next/navigation";
 import FoodsModal from "@/models/FoodsModal";
 import CartSideBar from "@/components/CartSideBar";
-// import ProductPage from "@/components/ProductPage";
+import Translation from "@/components/Translation"; // Translation added
 
 const getFoods = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/feedback`);
@@ -16,7 +16,6 @@ const getFoods = async () => {
 const getCategories = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`);
   const data = await res.json();
-  console.log(data);
   return data || [];
 };
 
@@ -29,7 +28,7 @@ const CategoryCard = ({ name, count, onClick, active }) => (
     }`}
   >
     <span className="text-sm font-medium text-gray-800 text-center truncate">
-      {name} ({count})
+      <Translation en={`${name} (${count})`} bn={`${name} (${count})`} />
     </span>
   </div>
 );
@@ -52,109 +51,28 @@ const FoodCard = ({ food, onClick }) => (
     <div className="flex-1 p-4 flex flex-col justify-between">
       <div>
         <p className="text-gray-600 text-sm font-bold line-clamp-2">
-          {food.title}
+          <Translation en={food.title} bn={food.titleBn || food.title} />
         </p>
         <p className="mt-2 text-orange-500 font-bold text-lg">
-          Tk {food.price}
+          <Translation en={`Tk ${food.price}`} bn={`৳ ${food.priceBn}`} />
         </p>
         <p className="text-gray-600 text-sm line-clamp-2">
-          {food.description ||
-            "Delicious, freshly prepared food made with premium ingredients."}
+          <Translation
+            en={
+              food.description ||
+              "Delicious, freshly prepared food made with premium ingredients."
+            }
+            bn={
+              food.descriptionBn ||
+              "সুস্বাদু, সতেজভাবে তৈরি খাবার, প্রিমিয়াম উপকরণ দিয়ে।"
+            }
+          />
         </p>
       </div>
     </div>
   </div>
 );
 
-// Sidebar Component
-// const Sidebar = () => (
-//   <div className="w-full md:w-80 bg-white shadow-md rounded-xl p-4 sticky top-24 h-auto md:h-[calc(100vh-6rem)] overflow-y-auto">
-//     <h3 className="text-xl font-bold mb-4">Your Cart</h3>
-//     <p className="text-gray-500 text-sm">Add items to see your cart.</p>
-//     <div className="mt-6 border-t border-gray-200 pt-4">
-//       <p className="text-gray-700 font-medium">Total: Tk 0</p>
-//       <button className="mt-2 w-full bg-orange-500 text-white py-2 rounded-lg hover:bg-orange-600 transition duration-300">
-//         Review Payment
-//       </button>
-//     </div>
-//   </div>
-// );
-
-// Food Modal Component
-// const FoodModal = ({ food, quantity, setQuantity, onClose }) => {
-//   const price = food?.price || 0;
-//   const increaseQty = () => setQuantity((prev) => prev + 1);
-//   const decreaseQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
-//   return (
-//     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-//       <div className="bg-white w-full max-w-3xl rounded-lg overflow-hidden shadow-xl relative">
-//         <button
-//           onClick={onClose}
-//           className="absolute top-4 right-4 text-red-600 cursor-pointer text-2xl font-bold z-20"
-//         >
-//           ✕
-//         </button>
-
-//         <div className="relative">
-//           <img
-//             src={
-//               food?.foodImg ||
-//               "https://images.unsplash.com/photo-1604908554165-2e0c15e36d1a"
-//             }
-//             alt={food?.title || "Food Item"}
-//             className="object-cover rounded-t-lg w-full h-50"
-//           />
-//         </div>
-
-//         <div className="p-6 space-y-4">
-//           <h2 className="text-xl font-bold">{food?.title || "Food Item"}</h2>
-//           <p className="text-lg font-bold">Tk {price}</p>
-//           <p className="text-gray-500 text-sm leading-relaxed">
-//             {food?.description ||
-//               "Delicious, freshly prepared food made with premium ingredients."}
-//           </p>
-//           <hr />
-//           <div>
-//             <h3 className="font-semibold text-lg">Special instructions</h3>
-//             <p className="text-sm text-gray-500 mb-2">
-//               Special requests are subject to the restaurant's approval.
-//             </p>
-//             <textarea
-//               placeholder="e.g. No mayo"
-//               className="w-full border rounded-lg p-3 outline-none focus:ring-2 focus:ring-pink-500"
-//               rows={3}
-//             ></textarea>
-//           </div>
-//         </div>
-
-//         <div className="border-t p-4 flex items-center gap-4">
-//           <div className="flex items-center border rounded-full px-3 py-2">
-//             <button
-//               onClick={decreaseQty}
-//               className="text-lg px-2 text-gray-600"
-//             >
-//               −
-//             </button>
-//             <span className="px-3 font-medium">{quantity}</span>
-//             <button
-//               onClick={increaseQty}
-//               className="text-lg px-2 text-gray-600"
-//             >
-//               +
-//             </button>
-//           </div>
-//           <button className="flex-1 bg-orange-500 text-white font-semibold py-3 rounded-lg hover:bg-orange-600 transition cursor-pointer">
-//             Add to cart • Tk {price * quantity}
-//           </button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-//  <FoodsModal></FoodsModal>;
-
-// Product Page
 const ProductPage = () => {
   const params = useParams();
   const { id } = params || {};
@@ -212,13 +130,24 @@ const ProductPage = () => {
     <div className="pb-20 px-2 sm:px-4">
       <div className="bg-[#FCFCFC] pt-4">
         {mainFood && (
-          <RestaurantHero foodImg={mainFood.foodImg} title={mainFood.title} />
+          <RestaurantHero
+            foodImg={mainFood.foodImg}
+            title={
+              <Translation
+                en={mainFood.title}
+                bn={mainFood.titleBn || mainFood.title}
+              />
+            }
+          />
         )}
       </div>
 
       <div className="py-5 relative max-w-[1380px] mx-auto">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">
-          {categories.length} Food Categories Find
+          <Translation
+            en={`${categories.length} Food Categories Found`}
+            bn={`${categories.length} খাবারের বিভাগ পাওয়া গেছে`}
+          />
         </h2>
 
         <button
@@ -269,7 +198,7 @@ const ProductPage = () => {
             </div>
           </div>
           <div className="md:col-span-3">
-            <CartSideBar></CartSideBar>;
+            <CartSideBar />
           </div>
         </div>
       </div>

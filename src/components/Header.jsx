@@ -11,7 +11,6 @@ import {
   X,
   User,
   Package,
-  Ticket,
   LogOut,
   ChevronDown,
 } from "lucide-react";
@@ -21,12 +20,17 @@ import Language from "./Language";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import InputSearch from "./InputSearch";
+import { useLanguage } from "@/contexts/LanguageProvider";
 
 const Header = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { data: session, status } = useSession();
+  const { language } = useLanguage(); // get current language
+
+  // ✅ Helper to show text based on language
+  const t = (enText, bnText) => (language === "bn" ? bnText : enText);
 
   return (
     <div className="w-full bg-white shadow-sm">
@@ -47,7 +51,7 @@ const Header = () => {
             href="/"
             className="text-orange-500 font-bold text-xl sm:text-2xl cursor-pointer"
           >
-            🍔QuickBite
+            {t("🍔QuickBite", "🍔কুইকবাইট")}
           </Link>
         </div>
 
@@ -60,7 +64,10 @@ const Header = () => {
         >
           <MapPin className="w-4 h-4" />
           <span className="truncate">
-            New Address Road 71, Dhaka, Bangladesh
+            {t(
+              "New Address Road 71, Dhaka, Bangladesh",
+              "নিউ অ্যাড্রেস রোড ৭১, ঢাকা, বাংলাদেশ",
+            )}
           </span>
         </a>
 
@@ -93,7 +100,7 @@ const Header = () => {
                     onClick={() => setDropdownOpen(false)}
                     className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                   >
-                    <User className="w-4 h-4" /> Profile
+                    <User className="w-4 h-4" /> {t("Profile", "প্রোফাইল")}
                   </Link>
                   <Link
                     href="/dashboard/admin"
@@ -101,27 +108,20 @@ const Header = () => {
                     className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                   >
                     <MdOutlineDashboardCustomize className="w-4 h-4" />{" "}
-                    Dashboard
+                    {t("Dashboard", "ড্যাশবোর্ড")}
                   </Link>
                   <Link
                     href="/orders"
                     onClick={() => setDropdownOpen(false)}
                     className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                   >
-                    <Package className="w-4 h-4" /> Orders
-                  </Link>
-                  <Link
-                    href="/vouchers"
-                    onClick={() => setDropdownOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
-                  >
-                    <Ticket className="w-4 h-4" /> Vouchers
+                    <Package className="w-4 h-4" /> {t("Orders", "অর্ডারসমূহ")}
                   </Link>
                   <button
                     onClick={() => signOut({ callbackUrl: "/" })}
                     className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 cursor-pointer"
                   >
-                    <LogOut className="w-4 h-4" /> Logout
+                    <LogOut className="w-4 h-4" /> {t("Logout", "লগ আউট")}
                   </button>
                 </div>
               )}
@@ -132,13 +132,13 @@ const Header = () => {
                 href="/login"
                 className="hidden md:block px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-100 transition"
               >
-                Log in
+                {t("Log in", "লগ ইন")}
               </Link>
               <Link
                 href="/register"
                 className="hidden md:block px-5 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition cursor-pointer"
               >
-                foods for delivery
+                {t("foods for delivery", "ফুডস ফর ডেলিভারি")}
               </Link>
             </>
           )}
@@ -161,46 +161,31 @@ const Header = () => {
             href="/"
             className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition"
           >
-            <MdOutlineDeliveryDining className="w-5 h-5" /> Delivery
+            <MdOutlineDeliveryDining className="w-5 h-5" />{" "}
+            {t("Delivery", "ডেলিভারি")}
           </Link>
           <Link
             href="/pick-up"
             className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition"
           >
-            <Bike className="w-5 h-5" /> Pick-up
+            <Bike className="w-5 h-5" /> {t("Pick-up", "পিক-আপ")}
           </Link>
           <Link
             href="/pandamart"
             className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition"
           >
-            <MdOutlineShoppingBag className="w-5 h-5" /> Pandamart
+            <MdOutlineShoppingBag className="w-5 h-5" />{" "}
+            {t("Pandamart", "পান্ডামার্ট")}
           </Link>
           <Link
             href="/shops"
             className="flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition"
           >
-            <Store className="w-5 h-5" /> Shops
+            <Store className="w-5 h-5" /> {t("Shops", "শপস")}
           </Link>
         </div>
 
-        {/* <div className="relative w-full lg:w-[400px]">
-          <form onSubmit={handleSubmit} className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <input
-              name="search"
-              type="text"
-              placeholder="Search for restaurants, cuisines, and dishes"
-              className="w-full pl-10 pr-24 py-2 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 text-sm"
-            />
-            <button
-              type="submit"
-              className="absolute right-1 top-1/2 -translate-y-1/2 bg-orange-500 text-white px-4 py-1.5 rounded-full text-sm hover:bg-orange-600 transition"
-            >
-              Search
-            </button>
-          </form>
-        </div> */}
-        <InputSearch></InputSearch>
+        <InputSearch />
       </div>
 
       {/* Mobile Drawer */}
@@ -214,7 +199,7 @@ const Header = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
-              <h2 className="font-semibold text-lg">Menu</h2>
+              <h2 className="font-semibold text-lg">{t("Menu", "মেনু")}</h2>
               <X
                 onClick={() => setOpen(false)}
                 className="w-5 h-5 cursor-pointer"
@@ -227,28 +212,28 @@ const Header = () => {
                 onClick={() => setOpen(false)}
                 className="text-gray-700 hover:text-orange-500"
               >
-                Home
+                {t("Home", "হোম")}
               </Link>
               <Link
                 href="/pick-up"
                 onClick={() => setOpen(false)}
                 className="text-gray-700 hover:text-orange-500"
               >
-                Pick-up
+                {t("Pick-up", "পিক-আপ")}
               </Link>
               <Link
                 href="/pandamart"
                 onClick={() => setOpen(false)}
                 className="text-gray-700 hover:text-orange-500"
               >
-                Pandamart
+                {t("Pandamart", "পান্ডামার্ট")}
               </Link>
               <Link
                 href="/shops"
                 onClick={() => setOpen(false)}
                 className="text-gray-700 hover:text-orange-500"
               >
-                Shops
+                {t("Shops", "শপস")}
               </Link>
 
               {status === "authenticated" && session?.user ? (
@@ -258,14 +243,14 @@ const Header = () => {
                     onClick={() => setOpen(false)}
                     className="text-gray-700 hover:text-orange-500"
                   >
-                    Profile
+                    {t("Profile", "প্রোফাইল")}
                   </Link>
                   <Link
                     href="/orders"
                     onClick={() => setOpen(false)}
                     className="text-gray-700 hover:text-orange-500"
                   >
-                    Orders
+                    {t("Orders", "অর্ডারসমূহ")}
                   </Link>
                   <button
                     onClick={() => {
@@ -274,7 +259,7 @@ const Header = () => {
                     }}
                     className="text-red-500 hover:text-red-600 text-left"
                   >
-                    Logout
+                    {t("Logout", "লগ আউট")}
                   </button>
                 </>
               ) : (
@@ -284,14 +269,14 @@ const Header = () => {
                     onClick={() => setOpen(false)}
                     className="text-gray-700 hover:text-orange-500"
                   >
-                    Log in
+                    {t("Log in", "লগ ইন")}
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setOpen(false)}
                     className="text-gray-700 hover:text-orange-500"
                   >
-                    Sign up
+                    {t("Sign up", "সাইন আপ")}
                   </Link>
                 </>
               )}

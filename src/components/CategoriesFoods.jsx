@@ -3,10 +3,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-// import Image from "next/image"; // ✅ Imported Next.js Image component
+import { useLanguage } from "@/contexts/LanguageProvider"; // ✅ Language context
 
 // Category Card
-const CategoryCard = ({ img, name, onClick, active }) => {
+const CategoryCard = ({ img, name, nameBn, onClick, active, lang }) => {
   return (
     <div
       onClick={onClick}
@@ -17,19 +17,19 @@ const CategoryCard = ({ img, name, onClick, active }) => {
       <img
         src={img}
         alt={name}
-        width={80} // Represents w-20 (20 * 4px = 80px)
-        height={80} // Represents h-20
+        width={80}
+        height={80}
         className="w-20 h-20 object-cover rounded-full mb-2"
       />
       <span className="text-sm font-medium text-gray-800 text-center">
-        {name}
+        {lang === "bn" ? nameBn || name : name}
       </span>
     </div>
   );
 };
 
-// 🔥 Updated Food Card
-const FoodCard = ({ food }) => {
+// Food Card
+const FoodCard = ({ food, lang }) => {
   const router = useRouter();
   return (
     <div
@@ -41,41 +41,40 @@ const FoodCard = ({ food }) => {
         <img
           src={food.foodImg}
           alt={food.title || food.foodName}
-          width={400} // Standard width for cards
-          height={160} // Matches h-[160px]
+          width={400}
+          height={160}
           className="h-[160px] w-full object-cover hover:scale-110 transition duration-500"
         />
       </div>
 
       {/* Content */}
       <div className="mt-3 space-y-1">
-        {/* ✅ Title */}
         <h3 className="font-semibold text-gray-800 text-lg">
-          {food.title || food.foodName}
+          {lang === "bn" ? food.titleBn : food.title}
         </h3>
-
-        {/* Category */}
         <p className="text-sm text-gray-600">
-          <span className="font-medium"></span>{" "}
-          {food.category || food.categoryName}
+          {lang === "bn" ? food.categoryBn : food.category}
         </p>
-
-        {/* Price */}
         <p className="text-orange-500 font-bold text-lg mt-2">
-          Tk {food.price}
+          {lang === "bn" ? `৳ ${food.priceBn}` : `Tk ${food.price}`}
+        </p>
+        <p className="text-gray-500 text-sm line-clamp-2">
+          {lang === "bn" ? food.descriptionBn : food.description}
         </p>
       </div>
     </div>
   );
 };
 
+// Main Component
 const CategoriesFoods = () => {
+  const { language } = useLanguage(); // ✅ get current language
   const [categories, setCategories] = useState([]);
   const [foods, setFoods] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const scrollRef = useRef(null);
 
-  // 🔹 Load Categories from LOCAL API
+  // Load Categories
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/categories`)
       .then((res) => res.json())
@@ -83,7 +82,7 @@ const CategoriesFoods = () => {
       .catch((err) => console.error("Failed to load categories:", err));
   }, []);
 
-  // 🔹 Load Foods from LOCAL API
+  // Load Foods
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/feedback`)
       .then((res) => res.json())
@@ -91,7 +90,6 @@ const CategoriesFoods = () => {
       .catch((err) => console.error("Failed to load foods:", err));
   }, []);
 
-  // 🔥 Filter Foods by Selected Category
   const filteredFoods = selectedCategory
     ? foods.filter(
         (food) =>
@@ -100,7 +98,6 @@ const CategoriesFoods = () => {
       )
     : foods;
 
-  // 🔹 Scroll Functions
   const scrollRight = () => {
     scrollRef.current?.scrollBy({
       left: 900,
@@ -119,7 +116,9 @@ const CategoriesFoods = () => {
     <div className="py-10 relative">
       {/* Categories Section */}
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
-        {categories.length} Food Catetogies
+        {language === "bn"
+          ? `${categories.length} টি খাবারের বিভাগ`
+          : `${categories.length} Food Categories`}
       </h2>
 
       <button
@@ -138,8 +137,10 @@ const CategoriesFoods = () => {
             key={cat.id}
             img={cat.categoryImg}
             name={cat.categoryName}
+            nameBn={cat.categoryBn}
             active={selectedCategory === cat.categoryName}
             onClick={() => setSelectedCategory(cat.categoryName)}
+            lang={language}
           />
         ))}
       </div>
@@ -151,15 +152,21 @@ const CategoriesFoods = () => {
         <ChevronRight className="w-5 h-5" />
       </button>
 
-      {/*Foods Section */}
+      {/* Foods Section */}
       <div className="mt-12">
         <h2 className="text-xl font-bold mb-6">
-          {selectedCategory ? `${selectedCategory} Foods` : "All Foods"}
+          {selectedCategory
+            ? language === "bn"
+              ? `${selectedCategory} এর খাবার`
+              : `${selectedCategory} Foods`
+            : language === "bn"
+              ? "সকল খাবার"
+              : "All Foods"}
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {filteredFoods.map((food) => (
-            <FoodCard key={food.id} food={food} />
+            <FoodCard key={food.id} food={food} lang={language} />
           ))}
         </div>
       </div>

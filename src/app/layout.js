@@ -3,7 +3,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/contexts/CartContext";
-import NextAuthProvider from "@/provider/NextAuthProvider"; // spelling fixed
+import NextAuthProvider from "@/provider/NextAuthProvider";
+import { LanguageProvider } from "@/contexts/LanguageProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,20 +23,22 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <NextAuthProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <CartProvider>
-            <Header />
-            <main className="max-w-[1380px] mx-auto min-h-[calc(100vh-395px)]">
-              {children}
-            </main>
-            <Footer />
-          </CartProvider>
-        </body>
-      </html>
-    </NextAuthProvider>
+    <html lang="en">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        <NextAuthProvider>
+          <LanguageProvider>
+            <CartProvider>
+              <Header />
+              <main className="max-w-[1380px] mx-auto min-h-[calc(100vh-395px)]">
+                {children}
+              </main>
+              <Footer />
+            </CartProvider>
+          </LanguageProvider>
+        </NextAuthProvider>
+      </body>
+    </html>
   );
 }

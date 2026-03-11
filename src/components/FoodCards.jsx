@@ -1,10 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-// import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageProvider"; // ✅ Language Context
 
 const FoodCards = ({ food }) => {
   const router = useRouter();
+  const { language } = useLanguage(); // ✅ get current language
+
   return (
     <div
       onClick={() => router.push(`/foods/${food.id}`)}
@@ -23,13 +25,32 @@ const FoodCards = ({ food }) => {
 
       {/* Content */}
       <div className="mt-2">
-        <h2 className="font-semibold text-gray-800 mb-2">{food.title}</h2>
+        {/* Title */}
+        <h2 className="font-semibold text-gray-800 mb-2">
+          {language === "bn" ? food.titleBn || food.title : food.title}
+        </h2>
+
+        {/* Category */}
         <p className="text-gray-600">
           <span className="font-medium text-gray-700"></span>
-          {food.category}
+          {language === "bn"
+            ? food.categoryBn 
+            : food.category}
         </p>
 
-        <p className="mt-3 font-bold text-orange-500">Tk {food.price}</p>
+        {/* Price */}
+        <p className="mt-3 font-bold text-orange-500">
+          {language === "bn" ? `৳ ${food.price}` : `Tk ${food.price}`}
+        </p>
+
+        {/* Optional Description */}
+        {food.description && (
+          <p className="text-gray-500 text-sm mt-1 line-clamp-2">
+            {language === "bn"
+              ? food.descriptionBn || "সুস্বাদু ও সতেজ খাবার।"
+              : food.description || "Delicious, freshly prepared food."}
+          </p>
+        )}
       </div>
     </div>
   );
