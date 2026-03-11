@@ -3,9 +3,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageProvider";
+import Translation from "./Translation";
 
-const CategoryCard = ({ img, name, onClick, active }) => {
+const CategoryCard = ({ img, nameEn, nameBn, onClick, active }) => {
+  const { language } = useLanguage();
+
   return (
     <div
       onClick={onClick}
@@ -15,13 +18,13 @@ const CategoryCard = ({ img, name, onClick, active }) => {
     >
       <img
         src={img || "https://via.placeholder.com/80"}
-        alt={name || "Category"}
+        alt={nameEn || "Category"}
         width={80}
         height={80}
         className="w-20 h-20 object-cover rounded-full mb-2"
       />
       <span className="text-sm font-medium text-gray-800 text-center">
-        {lang === "bn" ? nameBn || name : name}
+        {language === "bn" ? nameBn || nameEn : nameEn}
       </span>
     </div>
   );
@@ -36,7 +39,9 @@ const FoodCard = ({ food }) => {
     >
       <div className="overflow-hidden rounded-xl bg-gray-50">
         <img
-          src={food.foodImg || food.image || "https://via.placeholder.com/400x160"}
+          src={
+            food.foodImg || food.image || "https://via.placeholder.com/400x160"
+          }
           alt={food.title || food.foodName || "Food Item"}
           width={400}
           height={160}
@@ -54,13 +59,16 @@ const FoodCard = ({ food }) => {
           {food.category || food.categoryName || (food.tags && food.tags[0])}
         </p>
 
-        <p className="text-orange-500 font-bold text-lg mt-2">Tk {food.price}</p>
+        <p className="text-orange-500 font-bold text-lg mt-2">
+          Tk {food.price}
+        </p>
       </div>
     </div>
   );
 };
 
 const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
+  const { language } = useLanguage();
   const [categories, setCategories] = useState([]);
   const [foods, setFoods] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -70,7 +78,6 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/categories`)
       .then((res) => res.json())
       .then((data) => {
-        // Handle array or object structure safely
         const catArray = Array.isArray(data) ? data : data.categories || [];
         setCategories(catArray);
       })
@@ -92,26 +99,18 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
       .catch((err) => console.error(err));
   }, [selectedCategory, hideFoods]);
 
-  const handleCategoryClick = (name) => {
-    const newCategory = selectedCategory === name ? null : name;
+  const handleCategoryClick = (categoryName) => {
+    const newCategory = selectedCategory === categoryName ? null : categoryName;
     setSelectedCategory(newCategory);
-    if (onCategorySelect) {
-      onCategorySelect(newCategory || "");
-    }
+    if (onCategorySelect) onCategorySelect(newCategory || "");
   };
 
   const scrollRight = () => {
-    scrollRef.current?.scrollBy({
-      left: 600,
-      behavior: "smooth",
-    });
+    scrollRef.current?.scrollBy({ left: 600, behavior: "smooth" });
   };
 
   const scrollLeft = () => {
-    scrollRef.current?.scrollBy({
-      left: -600,
-      behavior: "smooth",
-    });
+    scrollRef.current?.scrollBy({ left: -600, behavior: "smooth" });
   };
 
   if (categories.length === 0) return null;
@@ -119,7 +118,9 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
   return (
     <div className="py-10">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
-        {categories.length} Food Categories
+        {categories.length}
+        {" "}
+        <Translation en="Categories" bn="শ্রেণীবিন্যাস" />
       </h2>
 
       <div className="relative flex items-center group">
@@ -138,7 +139,8 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
             <CategoryCard
               key={cat.id || cat._id}
               img={cat.categoryImg}
-              name={cat.categoryName}
+              nameEn={cat.categoryName}
+              nameBn={cat.categoryBn} // assuming backend sends bn name
               active={selectedCategory === cat.categoryName}
               onClick={() => handleCategoryClick(cat.categoryName)}
             />

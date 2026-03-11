@@ -24,7 +24,7 @@ const ReviewSection = ({ itemId, reviews = [], onReviewAdded }) => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    itemId: itemId, // This must match the ID used in the GET request
+                    itemId: itemId,  
                     user: session.user.name || "Anonymous",
                     rating,
                     comment

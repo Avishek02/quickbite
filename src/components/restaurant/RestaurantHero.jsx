@@ -3,17 +3,12 @@
 import React from "react";
 import { Star, Info, Bike, ShoppingBag } from "lucide-react";
 import Link from "next/link";
-<<<<<<< HEAD
 import { useLanguage } from "@/contexts/LanguageProvider";
-// import Image from "next/image";
+import Translation from "../Translation";
 
-const RestaurantHero = ({ foodImg, title }) => {
+const RestaurantHero = ({ foodImg, title, titleBn, id }) => {
   const { language } = useLanguage();
 
-=======
-
-const RestaurantHero = ({ foodImg, title, id }) => {
->>>>>>> origin/feature/team-integration
   return (
     <div className="max-w-[1380px] mx-auto">
       <nav className="text-sm text-gray-500 py-4 flex items-center gap-2 pb-4 ">
@@ -25,14 +20,16 @@ const RestaurantHero = ({ foodImg, title, id }) => {
           {language === "bn" ? "রেস্টুরেন্ট তালিকা" : "Restaurant List"}
         </span>
         <span>&gt;</span>
-        <span className="text-secondary font-medium">{title}</span>
+        <span className="text-secondary font-medium">
+          <Translation en={title} bn={titleBn} />
+        </span>
       </nav>
 
-      <div className="flex flex-col md:flex-row gap-6 items-start pb-7 mt-2  border-gray-100 pb-4 max-w-[1380px] mx-auto">
+      <div className="flex flex-col md:flex-row gap-6 items-start pb-7 mt-2 border-gray-100 pb-4 max-w-[1380px] mx-auto">
         <div className="w-full md:w-40 h-40 rounded-2xl overflow-hidden border border-gray-100 shrink-0">
           <img
             src={foodImg || "https://via.placeholder.com/160"}
-            alt={title || "Restaurant Logo"}
+            alt={titleBn || "Restaurant Logo"}
             width={160}
             height={160}
             className="w-full h-full object-cover"
@@ -48,7 +45,7 @@ const RestaurantHero = ({ foodImg, title, id }) => {
 
           <div className="flex justify-between items-start gap-4 mt-3">
             <h1 className="text-2xl md:text-3xl font-extrabold text-secondary">
-              {title}
+              <Translation en={title} bn={titleBn} />
             </h1>
           </div>
 
@@ -91,16 +88,19 @@ const RestaurantHero = ({ foodImg, title, id }) => {
                 </span>
               </div>
 
-<<<<<<< HEAD
-              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold">
-                <Info size={18} className="text-primary" />
-                <span>{language === "bn" ? "আরও তথ্য" : "More info"}</span>
-              </div>
-=======
               {id ? (
-                <Link href={`/items/${id}`} className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold hover:text-orange-500 transition-colors">
+                <Link
+                  href={`/items/${id}`}
+                  className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold hover:text-orange-500 transition-colors"
+                >
                   <Info size={18} className="text-primary" />
-                  <span>More info (Customize)</span>
+                  <span>
+                    {" "}
+                    <Translation
+                      en="Restaurant not found."
+                      bn="আরও তথ্য (কাস্টমাইজ করুন)"
+                    />
+                  </span>
                 </Link>
               ) : (
                 <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold">
@@ -108,7 +108,6 @@ const RestaurantHero = ({ foodImg, title, id }) => {
                   <span>More info</span>
                 </div>
               )}
->>>>>>> origin/feature/team-integration
             </div>
           </div>
         </div>
@@ -116,14 +115,10 @@ const RestaurantHero = ({ foodImg, title, id }) => {
 
       <div className="border-t border-gray-200 my-4 "></div>
 
-<<<<<<< HEAD
       <h2 className="font-bold text-2xl">
-        {language === "bn" ? "উপলব্ধ অফার" : "Available deals"}
+        {" "}
+        <Translation en="Available deals" bn="উপলভ্য অফারসমূহ" />
       </h2>
-
-=======
-      <h2 className="font-bold text-2xl">Available deals</h2>
->>>>>>> origin/feature/team-integration
       <div className="flex flex-col md:flex-row gap-4 md:w-[700px] mt-5 mb-10">
         {/* Card 1 */}
         <div className="flex-1 bg-gray-800 text-white rounded-xl p-6 flex items-center gap-4 shadow-md hover:shadow-xl transition">
@@ -138,16 +133,23 @@ const RestaurantHero = ({ foodImg, title, id }) => {
             </p>
           </div>
           <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center opacity-40">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8m4-4H8" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-gray-300"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v8m4-4H8"
+              />
             </svg>
           </div>
         </div>
 
-<<<<<<< HEAD
-        {/* Card 2 */}
-=======
->>>>>>> origin/feature/team-integration
         <div className="flex-1 bg-pink-100 text-pink-700 rounded-xl p-6 flex items-center gap-4 shadow-md hover:shadow-xl transition">
           <div className="flex-1">
             <h3 className="font-bold text-lg mb-1">
@@ -159,9 +161,20 @@ const RestaurantHero = ({ foodImg, title, id }) => {
                 : "Min. order Tk 50. Valid for all items. Auto applied."}
             </p>
           </div>
-          <div className=" h-10 bg-pink-200 rounded-full flex items-center justify-center opacity-40">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8m4-4H8" />
+          <div className="h-10 bg-pink-200 rounded-full flex items-center justify-center opacity-40">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5 text-pink-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 8v8m4-4H8"
+              />
             </svg>
           </div>
         </div>

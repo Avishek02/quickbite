@@ -34,10 +34,14 @@ export default function MapInner({ position, onLocationSelect }) {
   const center = position || [23.8103, 90.4125];
 
   return (
-    <MapContainer center={center} zoom={13} style={{ height: "100%", width: "100%", zIndex: 10 }}>
-      <TileLayer 
+    <MapContainer
+      center={center}
+      zoom={13}
+      style={{ height: "100%", width: "100%", zIndex: 10 }}
+    >
+      <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" 
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <LocationFinder position={position} onLocationSelect={onLocationSelect} />
     </MapContainer>

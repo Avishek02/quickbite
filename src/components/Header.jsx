@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import React, { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   MapPin,
   ShoppingCart,
@@ -32,10 +32,13 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { data: session, status } = useSession();
   const [deliveryAddress, setDeliveryAddress] = useState(
-    "Add Delivery Address",
+    "Add Delivery Address"
   );
-
   const pathname = usePathname();
+  const { language } = useLanguage();
+
+  // Translation helper
+  const t = (enText, bnText) => (language === "en" ? enText : bnText);
 
   useEffect(() => {
     const fetchDefaultAddress = () => {
@@ -45,10 +48,10 @@ const Header = () => {
           .then((data) => {
             if (data.success && data.addresses.length > 0) {
               setDeliveryAddress(
-                `${data.addresses[0].address}, ${data.addresses[0].city}`,
+                `${data.addresses[0].address}, ${data.addresses[0].city}`
               );
             } else {
-              setDeliveryAddress("Add Delivery Address");
+              setDeliveryAddress(t("Add Delivery Address", "ডেলিভারি ঠিকানা যোগ করুন"));
             }
           })
           .catch((err) => console.error(err));
@@ -56,13 +59,12 @@ const Header = () => {
     };
 
     fetchDefaultAddress();
-
     window.addEventListener("addressUpdated", fetchDefaultAddress);
 
     return () => {
       window.removeEventListener("addressUpdated", fetchDefaultAddress);
     };
-  }, [session]);
+  }, [session, language]);
 
   return (
     <>
@@ -83,7 +85,7 @@ const Header = () => {
               href="/"
               className="text-orange-500 font-bold text-xl sm:text-2xl cursor-pointer"
             >
-              🍔QuickBite
+              🍔{t("QuickBite", "কুইকবাইট")}
             </Link>
           </div>
 
@@ -95,7 +97,7 @@ const Header = () => {
             <span className="truncate">
               {status === "authenticated"
                 ? deliveryAddress
-                : "Add Delivery Address"}
+                : t("Add Delivery Address", "ডেলিভারি ঠিকানা যোগ করুন")}
             </span>
           </Link>
 
@@ -127,7 +129,7 @@ const Header = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >
-                      <User className="w-4 h-4" /> Profile
+                      <User className="w-4 h-4" /> {t("Profile", "প্রোফাইল")}
                     </Link>
 
                     {session.user.role === "admin" && (
@@ -137,7 +139,7 @@ const Header = () => {
                         className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                       >
                         <MdOutlineDashboardCustomize className="w-4 h-4" />{" "}
-                        Dashboard
+                        {t("Dashboard", "ড্যাশবোর্ড")}
                       </Link>
                     )}
 
@@ -146,7 +148,7 @@ const Header = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >
-                      <Package className="w-4 h-4" /> Orders
+                      <Package className="w-4 h-4" /> {t("Orders", "অর্ডার")}
                     </Link>
 
                     <Link
@@ -154,14 +156,14 @@ const Header = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >
-                      <Ticket className="w-4 h-4" /> Vouchers
+                      <Ticket className="w-4 h-4" /> {t("Vouchers", "ভাউচার")}
                     </Link>
 
                     <button
                       onClick={() => signOut({ callbackUrl: "/" })}
                       className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 cursor-pointer"
                     >
-                      <LogOut className="w-4 h-4" /> Logout
+                      <LogOut className="w-4 h-4" /> {t("Logout", "লগ আউট")}
                     </button>
                   </div>
                 )}
@@ -172,13 +174,13 @@ const Header = () => {
                   href="/login"
                   className="hidden md:block px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-100 transition"
                 >
-                  Log in
+                  {t("Log in", "লগ ইন")}
                 </Link>
                 <Link
                   href="/register"
                   className="hidden md:block px-5 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition cursor-pointer"
                 >
-                  Sign up for free delivery
+                  {t("Sign up for free delivery", "ফ্রি ডেলিভারির জন্য সাইন আপ")}
                 </Link>
               </>
             )}
@@ -209,7 +211,7 @@ const Header = () => {
                   : ""
               }`}
             >
-              <MdOutlineDeliveryDining className="w-5 h-5" /> Delivery
+              <MdOutlineDeliveryDining className="w-5 h-5" /> {t("Delivery", "ডেলিভারি")}
             </Link>
             <Link
               href="/pick-up"
@@ -217,7 +219,7 @@ const Header = () => {
                 pathname === "/pick-up" ? "text-orange-500" : ""
               }`}
             >
-              <Bike className="w-5 h-5" /> Pick-up
+              <Bike className="w-5 h-5" /> {t("Pick-up", "পিকআপ")}
             </Link>
             <Link
               href="/vouchers"
@@ -225,7 +227,7 @@ const Header = () => {
                 pathname === "/vouchers" ? "text-orange-500" : ""
               }`}
             >
-              <Ticket className="w-5 h-5" /> Vouchers
+              <Ticket className="w-5 h-5" /> {t("Vouchers", "ভাউচার")}
             </Link>
             <Link
               href="/pandamart"
@@ -233,7 +235,7 @@ const Header = () => {
                 pathname === "/pandamart" ? "text-orange-500" : ""
               }`}
             >
-              <MdOutlineShoppingBag className="w-5 h-5" /> Pandamart
+              <MdOutlineShoppingBag className="w-5 h-5" /> {t("Pandamart", "প্যান্ডামার্ট")}
             </Link>
             <Link
               href="/shops"
@@ -241,7 +243,7 @@ const Header = () => {
                 pathname === "/shops" ? "text-orange-500" : ""
               }`}
             >
-              <Store className="w-5 h-5" /> Shops
+              <Store className="w-5 h-5" /> {t("Shops", "দোকান")}
             </Link>
           </div>
 
@@ -260,7 +262,7 @@ const Header = () => {
           <div className="relative w-64 bg-white h-full shadow-lg flex flex-col pt-5 pb-4 overflow-y-auto">
             <div className="flex items-center justify-between px-4 pb-4 border-b">
               <span className="text-orange-500 font-bold text-xl">
-                🍔QuickBite
+                🍔{t("QuickBite", "কুইকবাইট")}
               </span>
               <X
                 className="w-6 h-6 text-gray-700 cursor-pointer"
@@ -277,7 +279,7 @@ const Header = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <MdOutlineDeliveryDining className="w-5 h-5" /> Delivery
+                <MdOutlineDeliveryDining className="w-5 h-5" /> {t("Delivery", "ডেলিভারি")}
               </Link>
               <Link
                 href="/pick-up"
@@ -288,7 +290,7 @@ const Header = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <Bike className="w-5 h-5" /> Pick-up
+                <Bike className="w-5 h-5" /> {t("Pick-up", "পিকআপ")}
               </Link>
               <Link
                 href="/vouchers"
@@ -299,7 +301,7 @@ const Header = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <Ticket className="w-5 h-5" /> Vouchers
+                <Ticket className="w-5 h-5" /> {t("Vouchers", "ভাউচার")}
               </Link>
               <Link
                 href="/pandamart"
@@ -310,7 +312,7 @@ const Header = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <MdOutlineShoppingBag className="w-5 h-5" /> Pandamart
+                <MdOutlineShoppingBag className="w-5 h-5" /> {t("Pandamart", "প্যান্ডামার্ট")}
               </Link>
               <Link
                 href="/shops"
@@ -321,47 +323,21 @@ const Header = () => {
                     : "text-gray-700 hover:bg-gray-100"
                 }`}
               >
-                <Store className="w-5 h-5" /> Shops
+                <Store className="w-5 h-5" /> {t("Shops", "দোকান")}
               </Link>
 
               <hr className="my-2 border-gray-100" />
 
               {status === "authenticated" && session?.user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                  >
-                    <User className="w-5 h-5" /> Profile
-                  </Link>
-                  {session.user.role === "admin" && (
-                    <Link
-                      href="/dashboard/admin"
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                    >
-                      <MdOutlineDashboardCustomize className="w-5 h-5" />{" "}
-                      Dashboard
-                    </Link>
-                  )}
-                  <Link
-                    href="/orders"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                  >
-                    <Package className="w-5 h-5" /> Orders
-                  </Link>
-                  <button
-                    onClick={() => {
-                      signOut({ callbackUrl: "/" });
-                      setOpen(false);
-                    }}
-                    className="flex items-center gap-2 p-2 rounded-xl text-red-500 hover:bg-gray-100 text-left w-full cursor-pointer"
-                  >
-                    <LogOut className="w-5 h-5" /> Logout
-                  </button>
-                </>
+                <button
+                  onClick={() => {
+                    signOut({ callbackUrl: "/" });
+                    setOpen(false);
+                  }}
+                  className="flex items-center gap-2 p-2 rounded-xl text-red-500 hover:bg-gray-100 text-left w-full cursor-pointer"
+                >
+                  <LogOut className="w-5 h-5" /> {t("Logout", "লগ আউট")}
+                </button>
               ) : (
                 <>
                   <Link
