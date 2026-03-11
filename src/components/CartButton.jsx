@@ -27,12 +27,12 @@ const CartButton = ({ food }) => {
     //     setIsLoading(false);
     //   }
   };
+
   return (
     <div className="p-4 flex items-center gap-4 w-full">
       <button
         onClick={handleAdd2Card}
-        // onClick={() => addToCart(food, quantity)}
-        className="flex-1 bg-orange-500 text-white font-semibold py-3 rounded-lg hover:bg-orange-600 transition cursor-pointer"
+        className="flex-1 bg-orange-500 text-white font-semibold py-3 rounded-lg hover:bg-orange-600 transition cursor-pointer disabled:bg-gray-400"
       >
         Add to cart
         {/* {price * quantity} */}
