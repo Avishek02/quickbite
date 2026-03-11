@@ -68,6 +68,7 @@ const FoodCard = ({ food, onClick }) => (
         </p>
       </div>
     </div>
+    <div>the min</div>
   </div>
 );
 
