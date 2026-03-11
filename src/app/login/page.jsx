@@ -4,19 +4,16 @@ import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "lucide-react";
+import Link from "next/link"; // FIX: Was wrongly imported from lucide-react by the team
 import SocialLogin from "@/components/SocialLogin";
 import Swal from "sweetalert2";
 
 export default function LoginPage() {
   const { status } = useSession();
   const router = useRouter();
+
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // If already logged in → redirect home
@@ -28,7 +25,6 @@ export default function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
 
     const form = e.target;
@@ -58,13 +54,15 @@ export default function LoginPage() {
 
     setErrors(newErrors);
 
-    if (hasError) return;
+    if (hasError) {
+      setLoading(false);
+      return;
+    }
 
     const result = await signIn("credentials", {
       redirect: false,
       email,
       password,
-      redirect: false,
     });
 
     if (result?.error) {
@@ -74,6 +72,7 @@ export default function LoginPage() {
         text: "Invalid email or password",
         confirmButtonColor: "#f97316",
       });
+      setLoading(false);
     } else {
       Swal.fire({
         icon: "success",
@@ -81,7 +80,8 @@ export default function LoginPage() {
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {
-        router.push("/");
+        router.refresh();
+        router.replace("/");
       });
     }
   };
@@ -139,19 +139,17 @@ export default function LoginPage() {
 
           <div className="text-right">
             <Link
-              href="/forgot-Password"
+              href="/forgot-password"
               className="text-sm text-blue-500 hover:underline"
             >
-              Forgot Password
+              Forgot Password?
             </Link>
           </div>
-
-          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors cursor-pointer"
+            className="w-full px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors cursor-pointer disabled:bg-gray-400"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -168,9 +166,9 @@ export default function LoginPage() {
 
         <p className="text-sm text-gray-500 mt-6 text-center">
           Don’t have an account?{" "}
-          <a href="/register" className="text-blue-500 underline">
+          <Link href="/register" className="text-blue-500 underline">
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>

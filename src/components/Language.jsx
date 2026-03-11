@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Globe } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageProvider";
+// import { useLanguage } from "@/contexts/LanguageProvider";
 
 const Language = () => {
   const { language, toggleLanguage } = useLanguage();

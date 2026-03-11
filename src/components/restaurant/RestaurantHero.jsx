@@ -3,15 +3,19 @@
 import React from "react";
 import { Star, Info, Bike, ShoppingBag } from "lucide-react";
 import Link from "next/link";
+<<<<<<< HEAD
 import { useLanguage } from "@/contexts/LanguageProvider";
 // import Image from "next/image";
 
 const RestaurantHero = ({ foodImg, title }) => {
   const { language } = useLanguage();
 
+=======
+
+const RestaurantHero = ({ foodImg, title, id }) => {
+>>>>>>> origin/feature/team-integration
   return (
     <div className="max-w-[1380px] mx-auto">
-      {/* Breadcrumbs */}
       <nav className="text-sm text-gray-500 py-4 flex items-center gap-2 pb-4 ">
         <span className="text-secondary font-medium hover:text-primary cursor-pointer underline underline-offset-4">
           {language === "bn" ? "ঢাকা" : "Dhaka"}
@@ -25,7 +29,6 @@ const RestaurantHero = ({ foodImg, title }) => {
       </nav>
 
       <div className="flex flex-col md:flex-row gap-6 items-start pb-7 mt-2  border-gray-100 pb-4 max-w-[1380px] mx-auto">
-        {/* Restaurant Image */}
         <div className="w-full md:w-40 h-40 rounded-2xl overflow-hidden border border-gray-100 shrink-0">
           <img
             src={foodImg || "https://via.placeholder.com/160"}
@@ -36,7 +39,6 @@ const RestaurantHero = ({ foodImg, title }) => {
           />
         </div>
 
-        {/* Restaurant Details */}
         <div className="flex-1 w-full">
           <p className="text-xs text-gray-500 mb-1">
             {language === "bn"
@@ -77,9 +79,7 @@ const RestaurantHero = ({ foodImg, title }) => {
             </div>
           </div>
 
-          {/* info section  */}
           <div className="flex items-center justify-between gap-6 mt-4 pt-4 w-full">
-            {/* Left Side: Rating and Info Group */}
             <div className="flex items-center gap-6">
               <div className="flex items-center gap-1 cursor-pointer hover:opacity-80">
                 <Star size={18} className="text-primary fill-primary" />
@@ -91,22 +91,39 @@ const RestaurantHero = ({ foodImg, title }) => {
                 </span>
               </div>
 
+<<<<<<< HEAD
               <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold">
                 <Info size={18} className="text-primary" />
                 <span>{language === "bn" ? "আরও তথ্য" : "More info"}</span>
               </div>
+=======
+              {id ? (
+                <Link href={`/items/${id}`} className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold hover:text-orange-500 transition-colors">
+                  <Info size={18} className="text-primary" />
+                  <span>More info (Customize)</span>
+                </Link>
+              ) : (
+                <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 text-secondary font-bold">
+                  <Info size={18} className="text-primary" />
+                  <span>More info</span>
+                </div>
+              )}
+>>>>>>> origin/feature/team-integration
             </div>
           </div>
         </div>
       </div>
 
-      {/* horizontal line */}
       <div className="border-t border-gray-200 my-4 "></div>
 
+<<<<<<< HEAD
       <h2 className="font-bold text-2xl">
         {language === "bn" ? "উপলব্ধ অফার" : "Available deals"}
       </h2>
 
+=======
+      <h2 className="font-bold text-2xl">Available deals</h2>
+>>>>>>> origin/feature/team-integration
       <div className="flex flex-col md:flex-row gap-4 md:w-[700px] mt-5 mb-10">
         {/* Card 1 */}
         <div className="flex-1 bg-gray-800 text-white rounded-xl p-6 flex items-center gap-4 shadow-md hover:shadow-xl transition">
@@ -121,24 +138,16 @@ const RestaurantHero = ({ foodImg, title }) => {
             </p>
           </div>
           <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center opacity-40">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-300"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8v8m4-4H8"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8m4-4H8" />
             </svg>
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Card 2 */}
+=======
+>>>>>>> origin/feature/team-integration
         <div className="flex-1 bg-pink-100 text-pink-700 rounded-xl p-6 flex items-center gap-4 shadow-md hover:shadow-xl transition">
           <div className="flex-1">
             <h3 className="font-bold text-lg mb-1">
@@ -151,19 +160,8 @@ const RestaurantHero = ({ foodImg, title }) => {
             </p>
           </div>
           <div className=" h-10 bg-pink-200 rounded-full flex items-center justify-center opacity-40">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-pink-600"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 8v8m4-4H8"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v8m4-4H8" />
             </svg>
           </div>
         </div>
