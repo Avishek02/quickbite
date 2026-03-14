@@ -1,11 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useLanguage } from "@/contexts/LanguageProvider"; // ✅ Language Context
+import { useLanguage } from "@/contexts/LanguageProvider";
 
 const FoodCards = ({ food }) => {
   const router = useRouter();
-  const { language } = useLanguage(); // ✅ get current language
+  const { language } = useLanguage();
 
   return (
     <div
@@ -25,7 +25,6 @@ const FoodCards = ({ food }) => {
 
       {/* Content */}
       <div className="mt-2">
-        {/* Title */}
         <h2 className="font-semibold text-gray-800 mb-2">
           {language === "bn" ? food.titleBn || food.title : food.title}
         </h2>
@@ -33,14 +32,12 @@ const FoodCards = ({ food }) => {
         {/* Category */}
         <p className="text-gray-600">
           <span className="font-medium text-gray-700"></span>
-          {language === "bn"
-            ? food.categoryBn 
-            : food.category}
+          {language === "bn" ? food.categoryBn : food.category}
         </p>
 
         {/* Price */}
         <p className="mt-3 font-bold text-orange-500">
-          {language === "bn" ? `৳ ${food.price}` : `Tk ${food.price}`}
+          {language === "bn" ? `${food.priceBn}` : `Tk ${food.price}`}
         </p>
 
         {/* Optional Description */}

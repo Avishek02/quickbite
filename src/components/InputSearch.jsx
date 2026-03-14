@@ -3,6 +3,7 @@
 import { Search } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import Translation from "./Translation";
 
 const InputSearch = () => {
   const router = useRouter();
@@ -51,7 +52,7 @@ const InputSearch = () => {
           type="submit"
           className="absolute right-1 top-1/2 -translate-y-1/2 bg-orange-500 text-white px-4 py-1.5 rounded-full text-sm hover:bg-orange-600 transition cursor-pointer"
         >
-          {language === "bn" ? "খুঁজুন" : "Search"}
+          <Translation en="Search" bn="খুঁজুন"></Translation>
         </button>
       </form>
     </div>

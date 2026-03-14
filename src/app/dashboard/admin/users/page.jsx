@@ -41,12 +41,9 @@ export default function UsersPage() {
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-8">
-        
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-800">
-            Users Management
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-800">Users Management</h2>
           <span className="text-sm text-gray-500">
             Total Users: {users.length}
           </span>
@@ -76,9 +73,7 @@ export default function UsersPage() {
                     {user.name}
                   </td>
 
-                  <td className="py-4 px-4 text-gray-600">
-                    {user.email}
-                  </td>
+                  <td className="py-4 px-4 text-gray-600">{user.email}</td>
 
                   <td className="py-4 px-4">
                     <span
@@ -114,10 +109,7 @@ export default function UsersPage() {
 
               {users.length === 0 && (
                 <tr>
-                  <td
-                    colSpan="4"
-                    className="text-center py-8 text-gray-400"
-                  >
+                  <td colSpan="4" className="text-center py-8 text-gray-400">
                     No users found.
                   </td>
                 </tr>

@@ -11,7 +11,7 @@ export default async function ItemPage({ params }) {
   const collection = await dbConnect("allFoods");
 
   let query = {};
-  
+
   if (!isNaN(id)) {
     query = { id: parseInt(id) };
   } else {
@@ -37,7 +37,7 @@ export default async function ItemPage({ params }) {
     description: food.description || "No description available.",
     category: food.category || "General",
     variations: food.variations || [],
-    restaurant_name: food.restaurant_name || "QuickBite"
+    restaurant_name: food.restaurant_name || "QuickBite",
   };
 
   return (

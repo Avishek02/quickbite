@@ -64,7 +64,6 @@ export const authOptions = {
           const userExists = await collection.findOne({ email });
 
           if (!userExists) {
-            // New user: Create account
             await collection.insertOne({
               name,
               email,
@@ -73,15 +72,14 @@ export const authOptions = {
               createdAt: new Date(),
             });
           } else {
-            // Existing user: Sync/Link account by updating missing image or name
             await collection.updateOne(
               { email },
-              { 
-                $set: { 
-                  image: userExists.image || image, 
-                  name: userExists.name || name 
-                } 
-              }
+              {
+                $set: {
+                  image: userExists.image || image,
+                  name: userExists.name || name,
+                },
+              },
             );
           }
         } catch (error) {

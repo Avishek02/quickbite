@@ -1,21 +1,20 @@
 "use client";
 
-import { 
-  LayoutDashboard, 
-  Users, 
-  ShoppingBag, 
-  Package, 
-  Store, 
-  CreditCard, 
-  Truck, 
-  X 
+import {
+  LayoutDashboard,
+  Users,
+  ShoppingBag,
+  Package,
+  Store,
+  CreditCard,
+  Truck,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function Sidebar({ closeSidebar }) {
   return (
     <div className="h-full text-gray-800 p-6 relative">
-
       {/* Close Button (Mobile only) */}
       <button
         className="md:hidden absolute top-4 right-4"
@@ -26,17 +25,12 @@ export default function Sidebar({ closeSidebar }) {
 
       {/* Title */}
       <div className="mb-10 mt-8 md:mt-0">
-        <h2 className="text-3xl font-extrabold text-orange-500">
-          Admin Panel
-        </h2>
-        <p className="text-sm text-gray-400 mt-1">
-          QuickBite Dashboard
-        </p>
+        <h2 className="text-3xl font-extrabold text-orange-500">Admin Panel</h2>
+        <p className="text-sm text-gray-400 mt-1">QuickBite Dashboard</p>
       </div>
 
       {/* Menu */}
       <ul className="space-y-4">
-
         <li>
           <Link
             href="/dashboard/admin"
@@ -115,7 +109,6 @@ export default function Sidebar({ closeSidebar }) {
             Delivery
           </Link>
         </li>
-
       </ul>
     </div>
   );

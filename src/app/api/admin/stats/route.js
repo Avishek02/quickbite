@@ -7,14 +7,12 @@ export async function GET() {
 
     const totalUsers = await db.collection("users").countDocuments();
     
-    // FIX: Point to 'allFoods'
     const totalFoods = await db.collection("allFoods").countDocuments();
     const totalOrders = await db.collection("orders").countDocuments();
 
     const orders = await db.collection("orders").find().toArray();
 
     const totalRevenue = orders.reduce(
-      // FIX: Use totalAmount to match team schema
       (sum, order) => sum + (order.totalAmount || order.total || 0),
       0
     );

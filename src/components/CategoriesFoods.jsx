@@ -3,9 +3,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Translation from "./Translation";
 
-const CategoryCard = ({ img, name, onClick, active }) => {
+const CategoryCard = ({ img, name, nameBn, onClick, active }) => {
   return (
     <div
       onClick={onClick}
@@ -20,8 +20,9 @@ const CategoryCard = ({ img, name, onClick, active }) => {
         height={80}
         className="w-20 h-20 object-cover rounded-full mb-2"
       />
+
       <span className="text-sm font-medium text-gray-800 text-center">
-        {lang === "bn" ? nameBn || name : name}
+        <Translation en={name} bn={nameBn || name} />
       </span>
     </div>
   );
@@ -29,6 +30,7 @@ const CategoryCard = ({ img, name, onClick, active }) => {
 
 const FoodCard = ({ food }) => {
   const router = useRouter();
+
   return (
     <div
       onClick={() => router.push(`/foods/${food.id || food._id}`)}
@@ -36,7 +38,9 @@ const FoodCard = ({ food }) => {
     >
       <div className="overflow-hidden rounded-xl bg-gray-50">
         <img
-          src={food.foodImg || food.image || "https://via.placeholder.com/400x160"}
+          src={
+            food.foodImg || food.image || "https://via.placeholder.com/400x160"
+          }
           alt={food.title || food.foodName || "Food Item"}
           width={400}
           height={160}
@@ -50,11 +54,15 @@ const FoodCard = ({ food }) => {
         </h3>
 
         <p className="text-sm text-gray-600 line-clamp-1">
-          <span className="font-medium">Category:</span>{" "}
+          <span className="font-medium">
+            <Translation en="Category:" bn="ক্যাটাগরি:" />
+          </span>{" "}
           {food.category || food.categoryName || (food.tags && food.tags[0])}
         </p>
 
-        <p className="text-orange-500 font-bold text-lg mt-2">Tk {food.price}</p>
+        <p className="text-orange-500 font-bold text-lg mt-2">
+          <Translation en="Tk" bn="৳" /> {food.price}
+        </p>
       </div>
     </div>
   );
@@ -70,7 +78,6 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/categories`)
       .then((res) => res.json())
       .then((data) => {
-        // Handle array or object structure safely
         const catArray = Array.isArray(data) ? data : data.categories || [];
         setCategories(catArray);
       })
@@ -79,6 +86,7 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
 
   useEffect(() => {
     if (hideFoods) return;
+
     const url = selectedCategory
       ? `/api/foods?category=${encodeURIComponent(selectedCategory)}&limit=50`
       : "/api/foods?limit=50";
@@ -94,7 +102,9 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
 
   const handleCategoryClick = (name) => {
     const newCategory = selectedCategory === name ? null : name;
+
     setSelectedCategory(newCategory);
+
     if (onCategorySelect) {
       onCategorySelect(newCategory || "");
     }
@@ -119,7 +129,8 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
   return (
     <div className="py-10">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
-        {categories.length} Food Categories
+        {categories.length}{" "}
+        <Translation en="Food Categories" bn="খাবারের ক্যাটাগরি" />
       </h2>
 
       <div className="relative flex items-center group">
@@ -139,6 +150,7 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
               key={cat.id || cat._id}
               img={cat.categoryImg}
               name={cat.categoryName}
+              nameBn={cat.categoryBn}
               active={selectedCategory === cat.categoryName}
               onClick={() => handleCategoryClick(cat.categoryName)}
             />
@@ -156,7 +168,11 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
       {!hideFoods && foods.length > 0 && (
         <div className="mt-12">
           <h2 className="text-xl font-bold mb-6">
-            {selectedCategory ? `${selectedCategory} Foods` : "All Foods"}
+            {selectedCategory ? (
+              `${selectedCategory} Foods`
+            ) : (
+              <Translation en="All Foods" bn="সব খাবার" />
+            )}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">

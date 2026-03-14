@@ -1,11 +1,9 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import CategoriesFoods from "@/components/CategoriesFoods";
 import FoodCards from "@/components/FoodCards";
 import { useSearchParams } from "next/navigation";
 import Translation from "@/components/Translation";
 import FoodCardsSkeleton from "@/components/FoodCardsSkeleton";
-import HeroSection from "@/components/HeroSection";
 
 const FoodsPageContent = () => {
   const searchParams = useSearchParams();
@@ -189,7 +187,13 @@ const FoodsPageContent = () => {
 
       {/* Main Content */}
       <div className="col-span-1 lg:col-span-9 px-4 lg:px-6">
-        <HeroSection></HeroSection>
+        <iframe
+          src="https://www.google.com/maps?q=Rajshahi,Bangladesh&output=embed"
+          width="100%"
+          height="300"
+          style={{ border: 0 }}
+          loading="lazy"
+        ></iframe>
         <CategoriesFoods
           onCategorySelect={setSelectedCategory}
           hideFoods={true}

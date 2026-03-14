@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useCart } from "@/contexts/CartContext";
 import ReviewSection from "@/components/items/ReviewSection";
@@ -30,15 +29,16 @@ const ItemDetailView = ({ item }) => {
 
   const fetchReviews = async () => {
     if (!item?.id) return;
-    
+
     try {
-      // FIX: Use item.id consistently (standardized in ItemPage)
       const res = await fetch(`/api/reviews?itemId=${item.id}`);
       const data = await res.json();
       if (data.success) {
         setReviews(data.reviews);
         if (data.reviews.length > 0) {
-          const avg = data.reviews.reduce((acc, curr) => acc + curr.rating, 0) / data.reviews.length;
+          const avg =
+            data.reviews.reduce((acc, curr) => acc + curr.rating, 0) /
+            data.reviews.length;
           setAverageRating(avg.toFixed(1));
         } else {
           setAverageRating(0);
@@ -114,7 +114,9 @@ const ItemDetailView = ({ item }) => {
     });
 
     if (missingRequirements?.length > 0) {
-      alert(`Please select: ${missingRequirements.map((v) => v.title).join(", ")}`);
+      alert(
+        `Please select: ${missingRequirements.map((v) => v.title).join(", ")}`,
+      );
       return;
     }
 
@@ -142,16 +144,25 @@ const ItemDetailView = ({ item }) => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">{item.title}</h1>
-              
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                {item.title}
+              </h1>
+
               <div className="flex items-center gap-2 mb-4">
                 <div className="flex items-center">
-                  <svg className="w-5 h-5 text-yellow-400 fill-yellow-400" viewBox="0 0 20 20">
+                  <svg
+                    className="w-5 h-5 text-yellow-400 fill-yellow-400"
+                    viewBox="0 0 20 20"
+                  >
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 </div>
-                <span className="font-bold text-gray-700">{averageRating > 0 ? averageRating : "New"}</span>
-                <span className="text-gray-400 text-sm">({reviews.length} Reviews)</span>
+                <span className="font-bold text-gray-700">
+                  {averageRating > 0 ? averageRating : "New"}
+                </span>
+                <span className="text-gray-400 text-sm">
+                  ({reviews.length} Reviews)
+                </span>
               </div>
 
               <div className="w-full aspect-video bg-gray-100 rounded-xl overflow-hidden relative">
@@ -177,8 +188,11 @@ const ItemDetailView = ({ item }) => {
               </div>
 
               <div className="mt-10">
-                {/* FIX: Use item.id consistently here as well */}
-                <ReviewSection itemId={item.id} reviews={reviews} onReviewAdded={fetchReviews} />
+                <ReviewSection
+                  itemId={item.id}
+                  reviews={reviews}
+                  onReviewAdded={fetchReviews}
+                />
               </div>
             </div>
           </div>
@@ -189,7 +203,7 @@ const ItemDetailView = ({ item }) => {
                 Customize your Order
               </h3>
 
-              <CustomizeOrder 
+              <CustomizeOrder
                 variations={item.variations}
                 handleOptionSelect={handleOptionSelect}
                 isSelected={isSelected}

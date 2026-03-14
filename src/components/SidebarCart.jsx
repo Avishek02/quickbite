@@ -18,7 +18,6 @@ export default function SidebarCart() {
         </h2>
       </div>
 
-      {/* Body & Footer via CartContent */}
       <div className="overflow-y-auto">
         <CartContent isDrawer={false} />
       </div>

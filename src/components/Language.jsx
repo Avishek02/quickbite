@@ -3,24 +3,21 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Globe } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageProvider";
-// import { useLanguage } from "@/contexts/LanguageProvider";
 
 const Language = () => {
   const { language, toggleLanguage } = useLanguage();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Load language from localStorage when component mounts
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedLang = localStorage.getItem("language");
       if (savedLang && savedLang !== language) {
-        toggleLanguage(savedLang); // set context language from localStorage
+        toggleLanguage(savedLang);
       }
     }
   }, []);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -37,7 +34,7 @@ const Language = () => {
     if (language !== lang) {
       toggleLanguage(lang);
       if (typeof window !== "undefined") {
-        localStorage.setItem("language", lang); // save selection
+        localStorage.setItem("language", lang);
       }
     }
     setOpen(false);

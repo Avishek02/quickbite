@@ -12,12 +12,10 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Redirect if not logged in
     if (status === "unauthenticated") {
       router.push("/login");
     }
 
-    // Fetch orders if we have the user's email
     if (session?.user?.email) {
       fetch(`/api/orders?email=${session.user.email}`)
         .then((res) => res.json())
@@ -36,7 +34,6 @@ export default function OrdersPage() {
     }
   }, [session, status, router]);
 
-  // Separate orders by status
   const activeOrders = orders
     .filter((o) => o.status === "Pending" || o.status === "On the way")
     .map(formatOrderForCard);
@@ -45,7 +42,6 @@ export default function OrdersPage() {
     .filter((o) => o.status === "Delivered" || o.status === "Cancelled")
     .map(formatOrderForCard);
 
-  // Helper function to format MongoDB data to match your OrderHistoryCard props
   function formatOrderForCard(order) {
     return {
       id: order._id,

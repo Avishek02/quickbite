@@ -13,11 +13,11 @@ const CategoryPage = () => {
     fetch(`${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/feedback`)
       .then((res) => res.json())
       .then((data) => {
-        // Safely handle the response whether it's an array or an object
         const items = Array.isArray(data) ? data : data.foods || [];
-        
+
         const filtered = items.filter(
-          (food) => food.categoryName === decodedName || food.category === decodedName,
+          (food) =>
+            food.categoryName === decodedName || food.category === decodedName,
         );
         setFoods(filtered);
       })
@@ -35,10 +35,17 @@ const CategoryPage = () => {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {foods.map((food) => (
-            <Link href={`/foods/${food._id || food.id}`} key={food._id || food.id}>
+            <Link
+              href={`/foods/${food._id || food.id}`}
+              key={food._id || food.id}
+            >
               <div className="bg-white shadow-md rounded-lg p-4 transition hover:shadow-xl cursor-pointer border border-gray-100 h-full flex flex-col">
                 <img
-                  src={food.foodImg || food.image || "https://via.placeholder.com/150"}
+                  src={
+                    food.foodImg ||
+                    food.image ||
+                    "https://via.placeholder.com/150"
+                  }
                   alt={food.foodName || food.title}
                   className="w-full h-40 object-cover rounded-md mb-3"
                 />

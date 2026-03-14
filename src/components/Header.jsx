@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import React, { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   MapPin,
   ShoppingCart,
@@ -19,11 +19,11 @@ import {
 import { MdOutlineDashboardCustomize } from "react-icons/md";
 import { MdOutlineDeliveryDining, MdOutlineShoppingBag } from "react-icons/md";
 import Language from "./Language";
+import Translation from "./Translation";
 import Link from "next/link";
 import { useCart } from "@/contexts/CartContext";
 import CartDrawer from "./CartDrawer";
 import InputSearch from "./InputSearch";
-import { useLanguage } from "@/contexts/LanguageProvider";
 
 const Header = () => {
   const { cartCount } = useCart();
@@ -83,7 +83,7 @@ const Header = () => {
               href="/"
               className="text-orange-500 font-bold text-xl sm:text-2xl cursor-pointer"
             >
-              🍔QuickBite
+              <Translation en="🍔QuickBite " bn="🍔কুইকবাইট" />
             </Link>
           </div>
 
@@ -92,10 +92,16 @@ const Header = () => {
             className="hidden lg:flex items-center gap-2 text-gray-900 text-sm hover:bg-gray-100 px-3 py-2 rounded-xl cursor-pointer max-w-[400px] transition"
           >
             <MapPin className="w-4 h-4 shrink-0" />
+
             <span className="truncate">
-              {status === "authenticated"
-                ? deliveryAddress
-                : "Add Delivery Address"}
+              {status === "authenticated" ? (
+                <Translation
+                  en="Add Delivery Address"
+                  bn="ডেলিভারি ঠিকানা যোগ করুন"
+                />
+              ) : (
+                deliveryAddress
+              )}
             </span>
           </Link>
 
@@ -127,7 +133,8 @@ const Header = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >
-                      <User className="w-4 h-4" /> Profile
+                      <User className="w-4 h-4" />
+                      <Translation en="Profile" bn="প্রোফাইল" />
                     </Link>
 
                     {session.user.role === "admin" && (
@@ -136,8 +143,8 @@ const Header = () => {
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                       >
-                        <MdOutlineDashboardCustomize className="w-4 h-4" />{" "}
-                        Dashboard
+                        <MdOutlineDashboardCustomize className="w-4 h-4" />
+                        <Translation en="Dashboard" bn="ড্যাশবোর্ড" />
                       </Link>
                     )}
 
@@ -146,7 +153,8 @@ const Header = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >
-                      <Package className="w-4 h-4" /> Orders
+                      <Package className="w-4 h-4" />
+                      <Translation en="Orders" bn="অর্ডারসমূহ" />
                     </Link>
 
                     <Link
@@ -154,14 +162,16 @@ const Header = () => {
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100"
                     >
-                      <Ticket className="w-4 h-4" /> Vouchers
+                      <Ticket className="w-4 h-4" />
+                      <Translation en="Vouchers" bn="ভাউচার" />
                     </Link>
 
                     <button
                       onClick={() => signOut({ callbackUrl: "/" })}
                       className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-500 hover:bg-gray-100 cursor-pointer"
                     >
-                      <LogOut className="w-4 h-4" /> Logout
+                      <LogOut className="w-4 h-4" />
+                      <Translation en="Logout" bn="লগ আউট" />
                     </button>
                   </div>
                 )}
@@ -172,13 +182,17 @@ const Header = () => {
                   href="/login"
                   className="hidden md:block px-4 py-1.5 border rounded-lg text-sm hover:bg-gray-100 transition"
                 >
-                  Log in
+                  <Translation en="Log in" bn="লগ ইন" />
                 </Link>
+
                 <Link
                   href="/register"
                   className="hidden md:block px-5 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition cursor-pointer"
                 >
-                  Sign up for free delivery
+                  <Translation
+                    en="Sign up for free delivery"
+                    bn="ফ্রি ডেলিভারির জন্য সাইন আপ করুন"
+                  />
                 </Link>
               </>
             )}
@@ -190,6 +204,7 @@ const Header = () => {
               className="relative bg-gray-100 p-3 rounded-full cursor-pointer hover:bg-gray-200 transition-colors"
             >
               <ShoppingCart className="w-5 h-5 text-gray-800" />
+
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-pink-600 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-md">
                   {cartCount}
@@ -209,39 +224,48 @@ const Header = () => {
                   : ""
               }`}
             >
-              <MdOutlineDeliveryDining className="w-5 h-5" /> Delivery
+              <MdOutlineDeliveryDining className="w-5 h-5" />
+              <Translation en="Delivery" bn="ডেলিভারি" />
             </Link>
+
             <Link
               href="/pick-up"
               className={`flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition ${
                 pathname === "/pick-up" ? "text-orange-500" : ""
               }`}
             >
-              <Bike className="w-5 h-5" /> Pick-up
+              <Bike className="w-5 h-5" />
+              <Translation en="Pick-up" bn="পিকআপ" />
             </Link>
+
             <Link
               href="/vouchers"
               className={`flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition ${
                 pathname === "/vouchers" ? "text-orange-500" : ""
               }`}
             >
-              <Ticket className="w-5 h-5" /> Vouchers
+              <Ticket className="w-5 h-5" />
+              <Translation en="Vouchers" bn="ভাউচার" />
             </Link>
+
             <Link
               href="/pandamart"
               className={`flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition ${
                 pathname === "/pandamart" ? "text-orange-500" : ""
               }`}
             >
-              <MdOutlineShoppingBag className="w-5 h-5" /> Pandamart
+              <MdOutlineShoppingBag className="w-5 h-5" />
+              <Translation en="Pandamart" bn="পান্ডামার্ট" />
             </Link>
+
             <Link
               href="/shops"
               className={`flex items-center gap-2 hover:bg-gray-100 p-2 rounded-xl transition ${
                 pathname === "/shops" ? "text-orange-500" : ""
               }`}
             >
-              <Store className="w-5 h-5" /> Shops
+              <Store className="w-5 h-5" />
+              <Translation en="Shops" bn="দোকান" />
             </Link>
           </div>
 
@@ -250,140 +274,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-
-      {open && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
-          <div
-            className="fixed inset-0 bg-black bg-opacity-50"
-            onClick={() => setOpen(false)}
-          ></div>
-          <div className="relative w-64 bg-white h-full shadow-lg flex flex-col pt-5 pb-4 overflow-y-auto">
-            <div className="flex items-center justify-between px-4 pb-4 border-b">
-              <span className="text-orange-500 font-bold text-xl">
-                🍔QuickBite
-              </span>
-              <X
-                className="w-6 h-6 text-gray-700 cursor-pointer"
-                onClick={() => setOpen(false)}
-              />
-            </div>
-            <div className="flex flex-col gap-2 p-4">
-              <Link
-                href="/"
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-2 p-2 rounded-xl transition ${
-                  pathname === "/" || pathname.startsWith("/foods")
-                    ? "text-orange-500 bg-orange-50"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <MdOutlineDeliveryDining className="w-5 h-5" /> Delivery
-              </Link>
-              <Link
-                href="/pick-up"
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-2 p-2 rounded-xl transition ${
-                  pathname === "/pick-up"
-                    ? "text-orange-500 bg-orange-50"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Bike className="w-5 h-5" /> Pick-up
-              </Link>
-              <Link
-                href="/vouchers"
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-2 p-2 rounded-xl transition ${
-                  pathname === "/vouchers"
-                    ? "text-orange-500 bg-orange-50"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Ticket className="w-5 h-5" /> Vouchers
-              </Link>
-              <Link
-                href="/pandamart"
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-2 p-2 rounded-xl transition ${
-                  pathname === "/pandamart"
-                    ? "text-orange-500 bg-orange-50"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <MdOutlineShoppingBag className="w-5 h-5" /> Pandamart
-              </Link>
-              <Link
-                href="/shops"
-                onClick={() => setOpen(false)}
-                className={`flex items-center gap-2 p-2 rounded-xl transition ${
-                  pathname === "/shops"
-                    ? "text-orange-500 bg-orange-50"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                <Store className="w-5 h-5" /> Shops
-              </Link>
-
-              <hr className="my-2 border-gray-100" />
-
-              {status === "authenticated" && session?.user ? (
-                <>
-                  <Link
-                    href="/profile"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                  >
-                    <User className="w-5 h-5" /> Profile
-                  </Link>
-                  {session.user.role === "admin" && (
-                    <Link
-                      href="/dashboard/admin"
-                      onClick={() => setOpen(false)}
-                      className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                    >
-                      <MdOutlineDashboardCustomize className="w-5 h-5" />{" "}
-                      Dashboard
-                    </Link>
-                  )}
-                  <Link
-                    href="/orders"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                  >
-                    <Package className="w-5 h-5" /> Orders
-                  </Link>
-                  <button
-                    onClick={() => {
-                      signOut({ callbackUrl: "/" });
-                      setOpen(false);
-                    }}
-                    className="flex items-center gap-2 p-2 rounded-xl text-red-500 hover:bg-gray-100 text-left w-full cursor-pointer"
-                  >
-                    <LogOut className="w-5 h-5" /> Logout
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                  >
-                    {t("Log in", "লগ ইন")}
-                  </Link>
-                  <Link
-                    href="/register"
-                    onClick={() => setOpen(false)}
-                    className="flex items-center gap-2 p-2 rounded-xl text-gray-700 hover:bg-gray-100"
-                  >
-                    {t("Sign up", "সাইন আপ")}
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
 
       <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>

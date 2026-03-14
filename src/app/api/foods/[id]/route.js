@@ -5,13 +5,11 @@ import { ObjectId } from "mongodb";
 export async function GET(request, { params }) {
   try {
     const { id } = await params;
-    
-    // FIX: Point to the actual team collection 'allFoods'
+
     const collection = await dbConnect("allFoods");
 
     let query = {};
-    
-    // Support both the team's numeric 'id' and MongoDB '_id'
+
     if (!isNaN(id)) {
       query = { id: parseInt(id) };
     } else {
@@ -19,8 +17,8 @@ export async function GET(request, { params }) {
         query = { _id: new ObjectId(id) };
       } catch {
         return NextResponse.json(
-          { success: false, message: "Invalid ID format" }, 
-          { status: 400 }
+          { success: false, message: "Invalid ID format" },
+          { status: 400 },
         );
       }
     }
@@ -29,12 +27,11 @@ export async function GET(request, { params }) {
 
     if (!food) {
       return NextResponse.json(
-        { success: false, message: "Food item not found" }, 
-        { status: 404 }
+        { success: false, message: "Food item not found" },
+        { status: 404 },
       );
     }
 
-    // FIX: Mapping values based on team schema examples
     const mappedFood = {
       ...food,
       id: food.id || food._id.toString(),
@@ -52,8 +49,8 @@ export async function GET(request, { params }) {
   } catch (error) {
     console.error("Single food fetch error:", error);
     return NextResponse.json(
-      { success: false, message: "Server error" }, 
-      { status: 500 }
+      { success: false, message: "Server error" },
+      { status: 500 },
     );
   }
 }
