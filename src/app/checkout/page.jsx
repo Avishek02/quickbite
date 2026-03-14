@@ -192,11 +192,100 @@ export default function CheckoutPage() {
           </h2>
 
           {savedAddresses.length > 0 && (
-            <AddressDropdown
-              savedAddresses={savedAddresses}
-              selectedAddressId={selectedAddressId}
-              onSelect={handleCustomAddressSelect}
-            />
+            <div className="mb-6 relative" ref={dropdownRef}>
+              <label className="block text-sm font-semibold text-gray-800 mb-2">
+                Select a Saved Address
+              </label>
+
+              <div
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className={`w-full p-4 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
+                  isDropdownOpen
+                    ? "border-orange-500 ring-2 ring-orange-100 bg-orange-50/50"
+                    : "border-gray-200 hover:border-gray-300 bg-white"
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="bg-orange-100 p-2 rounded-full text-orange-600">
+                    <MapPin size={18} />
+                  </div>
+                  <div>
+                    {selectedAddressId ? (
+                      (() => {
+                        const selected = savedAddresses.find(
+                          (a) => a._id === selectedAddressId,
+                        );
+                        return selected ? (
+                          <>
+                            <p className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                              {selected.label}
+                              {selected.isDefault && (
+                                <span className="bg-orange-100 text-orange-600 text-[10px] px-2 py-0.5 rounded uppercase tracking-wider font-bold">
+                                  Default
+                                </span>
+                              )}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate max-w-[200px] sm:max-w-[300px]">
+                              {selected.address}, {selected.city}
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-sm text-gray-500">
+                            Choose an address...
+                          </p>
+                        );
+                      })()
+                    ) : (
+                      <p className="text-sm text-gray-500">
+                        Choose an address...
+                      </p>
+                    )}
+                  </div>
+                </div>
+                <ChevronDown
+                  size={20}
+                  className={`text-gray-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                />
+              </div>
+
+              {isDropdownOpen && (
+                <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-xl shadow-xl overflow-hidden">
+                  <div className="max-h-60 overflow-y-auto p-2">
+                    {savedAddresses.map((addr) => (
+                      <div
+                        key={addr._id}
+                        onClick={() => handleCustomAddressSelect(addr)}
+                        className={`flex items-center justify-between p-3 rounded-lg cursor-pointer transition-colors ${
+                          selectedAddressId === addr._id
+                            ? "bg-orange-50"
+                            : "hover:bg-gray-50"
+                        }`}
+                      >
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                            {addr.label}
+                            {addr.isDefault && (
+                              <span className="bg-orange-100 text-orange-600 text-[10px] px-2 py-0.5 rounded uppercase tracking-wider font-bold">
+                                Default
+                              </span>
+                            )}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {addr.address}, {addr.city}
+                          </span>
+                        </div>
+                        {selectedAddressId === addr._id && (
+                          <Check
+                            size={18}
+                            className="text-orange-500 shrink-0 ml-2"
+                          />
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           <div className="w-full h-48 rounded-xl overflow-hidden mb-2 border border-gray-300 relative z-0">
@@ -252,6 +341,33 @@ export default function CheckoutPage() {
               placeholder="Note to rider - e.g. building, landmark"
               className="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm text-black resize-none focus:outline-none focus:border-gray-600"
             />
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+          <h2 className="text-xl font-semibold mb-4 text-black">
+            Delivery options
+          </h2>
+          <div className="space-y-3">
+            <label className="border border-gray-300 rounded-xl p-4 flex justify-between items-center cursor-pointer hover:border-gray-400 transition-colors">
+              <span className="text-black">Standard 30 – 45 mins</span>
+              <input
+                type="radio"
+                name="delivery"
+                defaultChecked
+                className="accent-orange-600 w-5 h-5"
+              />
+            </label>
+            <label className="border border-gray-300 rounded-xl p-4 flex justify-between items-center cursor-pointer hover:border-gray-400 transition-colors">
+              <span className="text-black">
+                Priority 25 – 40 mins (+ Tk 40)
+              </span>
+              <input
+                type="radio"
+                name="delivery"
+                className="accent-orange-600 w-5 h-5"
+              />
+            </label>
           </div>
         </div>
 
@@ -325,7 +441,7 @@ export default function CheckoutPage() {
                       {item.selectedVariations &&
                         Object.values(item.selectedVariations).map(
                           (variant, i) => {
-                            if (Array.isArray(variant))
+                            if (Array.isArray(variant)) {
                               return variant.map((v, j) => (
                                 <p
                                   key={`${i}-${j}`}
@@ -334,16 +450,20 @@ export default function CheckoutPage() {
                                   + {v.name}
                                 </p>
                               ));
-                            else if (variant)
+                            } else if (variant) {
                               return (
                                 <p key={i} className="text-xs text-gray-500">
                                   + {variant.name}
                                 </p>
                               );
+                            }
                             return null;
                           },
                         )}
                     </div>
+                  </div>
+                  <div className="font-semibold text-gray-900">
+                    Tk {item.totalPrice}
                   </div>
                 </div>
               ))}

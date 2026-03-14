@@ -25,7 +25,6 @@ const FoodCards = ({ food }) => {
 
       {/* Content */}
       <div className="mt-2">
-        {/* Title */}
         <h2 className="font-semibold text-gray-800 mb-2">
           {language === "bn" ? food.titleBn || food.title : food.title}
         </h2>
@@ -38,7 +37,7 @@ const FoodCards = ({ food }) => {
 
         {/* Price */}
         <p className="mt-3 font-bold text-orange-500">
-          {language === "bn" ? ` ${food.priceBn}` : `${food.price}`}
+          {language === "bn" ? `${food.priceBn}` : `Tk ${food.price}`}
         </p>
 
         {/* Optional Description */}

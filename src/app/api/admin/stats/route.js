@@ -4,9 +4,12 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  
+
   if (!session || session.user.role !== "admin") {
-    return Response.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    return Response.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 },
+    );
   }
 
   try {
@@ -14,14 +17,20 @@ export async function GET() {
     const db = client.db(process.env.DB_NAME || "quickbite");
 
     const totalUsers = await db.collection("users").countDocuments();
+
     const totalFoods = await db.collection("allFoods").countDocuments();
-    const totalOrders = await db.collection("orders").countDocuments({ paymentStatus: "Paid" });
+    const totalOrders = await db
+      .collection("orders")
+      .countDocuments({ paymentStatus: "Paid" });
 
-    const paidOrders = await db.collection("orders").find({ paymentStatus: "Paid" }).toArray();
+    const paidOrders = await db
+      .collection("orders")
+      .find({ paymentStatus: "Paid" })
+      .toArray();
 
-    const totalRevenue = paidOrders.reduce(
+    const totalRevenue = orders.reduce(
       (sum, order) => sum + (order.totalAmount || order.total || 0),
-      0
+      0,
     );
 
     return Response.json({

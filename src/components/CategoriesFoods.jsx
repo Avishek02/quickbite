@@ -23,8 +23,9 @@ const CategoryCard = ({ img, nameEn, nameBn, onClick, active }) => {
         height={80}
         className="w-20 h-20 object-cover rounded-full mb-2"
       />
+
       <span className="text-sm font-medium text-gray-800 text-center">
-        {language === "bn" ? nameBn || nameEn : nameEn}
+        <Translation en={name} bn={nameBn || name} />
       </span>
     </div>
   );
@@ -32,6 +33,7 @@ const CategoryCard = ({ img, nameEn, nameBn, onClick, active }) => {
 
 const FoodCard = ({ food }) => {
   const router = useRouter();
+
   return (
     <div
       onClick={() => router.push(`/foods/${food.id || food._id}`)}
@@ -55,12 +57,14 @@ const FoodCard = ({ food }) => {
         </h3>
 
         <p className="text-sm text-gray-600 line-clamp-1">
-          <span className="font-medium">Category:</span>{" "}
+          <span className="font-medium">
+            <Translation en="Category:" bn="ক্যাটাগরি:" />
+          </span>{" "}
           {food.category || food.categoryName || (food.tags && food.tags[0])}
         </p>
 
         <p className="text-orange-500 font-bold text-lg mt-2">
-          Tk {food.price}
+          <Translation en="Tk" bn="৳" /> {food.price}
         </p>
       </div>
     </div>
@@ -86,6 +90,7 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
 
   useEffect(() => {
     if (hideFoods) return;
+
     const url = selectedCategory
       ? `/api/foods?category=${encodeURIComponent(selectedCategory)}&limit=50`
       : "/api/foods?limit=50";
@@ -99,10 +104,14 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
       .catch((err) => console.error(err));
   }, [selectedCategory, hideFoods]);
 
-  const handleCategoryClick = (categoryName) => {
-    const newCategory = selectedCategory === categoryName ? null : categoryName;
+  const handleCategoryClick = (name) => {
+    const newCategory = selectedCategory === name ? null : name;
+
     setSelectedCategory(newCategory);
-    if (onCategorySelect) onCategorySelect(newCategory || "");
+
+    if (onCategorySelect) {
+      onCategorySelect(newCategory || "");
+    }
   };
 
   const scrollRight = () => {
@@ -118,9 +127,8 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
   return (
     <div className="py-10">
       <h2 className="text-2xl font-bold text-gray-900 mb-6">
-        {categories.length}
-        {" "}
-        <Translation en="Categories" bn="শ্রেণীবিন্যাস" />
+        {categories.length}{" "}
+        <Translation en="Food Categories" bn="খাবারের ক্যাটাগরি" />
       </h2>
 
       <div className="relative flex items-center group">
@@ -158,7 +166,11 @@ const CategoriesFoods = ({ onCategorySelect, hideFoods = false }) => {
       {!hideFoods && foods.length > 0 && (
         <div className="mt-12">
           <h2 className="text-xl font-bold mb-6">
-            {selectedCategory ? `${selectedCategory} Foods` : "All Foods"}
+            {selectedCategory ? (
+              `${selectedCategory} Foods`
+            ) : (
+              <Translation en="All Foods" bn="সব খাবার" />
+            )}
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">

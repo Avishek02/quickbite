@@ -11,31 +11,22 @@ export default function CartDrawer({ isOpen, onClose }) {
 
   return (
     <>
-      {/* Overlay */}
+      {/* Dark Overlay */}
       <div
-        className={`fixed inset-0 bg-black/50 transition-opacity z-50 ${
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`fixed inset-0 bg-black/50 transition-opacity z-50 ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
         onClick={onClose}
       />
 
-      {/* Drawer */}
+      {/* Sliding Drawer */}
       <div
-        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[60] transform transition-transform duration-300 ease-in-out flex flex-col ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[60] transform transition-transform duration-300 ease-in-out flex flex-col ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         {/* Header */}
         <div className="p-5 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
           <h2 className="text-xl font-extrabold text-gray-900 flex items-center gap-2">
             <ShoppingBag className="text-orange-500 w-6 h-6" />
-
-            <Translation
-              en={`Your Cart (${cartCount})`}
-              bn={`আপনার কার্ট (${cartCount})`}
-            />
+            <Translation en="Your Cart" bn="আপনার কার্ট" /> ({cartCount})
           </h2>
-
           <button
             onClick={onClose}
             className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors cursor-pointer"

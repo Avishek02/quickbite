@@ -5,8 +5,10 @@ import React, { useEffect, useState, useRef } from "react";
 import RestaurantHero from "@/components/restaurant/RestaurantHero";
 import { useParams } from "next/navigation";
 import SidebarCart from "@/components/SidebarCart";
-import { useCart } from "@/contexts/CartContext";
 import Translation from "@/components/Translation";
+import FoodCardsSkeleton from "@/components/FoodCardsSkeleton";
+import AddToCardModal from "@/models/AddToCardModal";
+
 const getFoodById = async (id) => {
   const res = await fetch(`/api/foods/${id}`);
   const data = await res.json();
@@ -60,128 +62,16 @@ const FoodCard = ({ food, onClick }) => (
         </p>
 
         <p className="mt-2 text-orange-500 font-bold text-lg">
-          <Translation
-            en={`Tk ${food.price}`}
-            bn={`৳ ${food.priceBn || food.price}`}
-          />
+          <Translation en={`Tk ${food.price}`} bn={`${food.priceBn}`} />
         </p>
 
         <p className="text-gray-500 text-xs mt-2 line-clamp-2">
-          <Translation
-            en={
-              food.description ||
-              "Delicious, freshly prepared food made with premium ingredients."
-            }
-            bn={food.descriptionBn || "তাজা উপকরণ দিয়ে তৈরি সুস্বাদু খাবার।"}
-          />
+          <Translation en={food.description} bn={food.descriptionBn} />
         </p>
       </div>
     </div>
   </div>
 );
-
-const FoodModal = ({ food, quantity, setQuantity, onClose }) => {
-  const { addToCart } = useCart();
-  const price = food?.price || 0;
-
-  const increaseQty = () => setQuantity((prev) => prev + 1);
-  const decreaseQty = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-
-  const handleAddToCart = () => {
-    addToCart({
-      cartItemId: Date.now(),
-      itemId: food._id || food.id,
-      title: food.title || food.foodName,
-      image: food.foodImg || food.image,
-      price: food.price,
-      quantity,
-      totalPrice: food.price * quantity,
-    });
-
-    onClose();
-  };
-
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl relative max-h-[90vh] flex flex-col">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-800 bg-white/80 hover:bg-white rounded-full w-8 h-8 flex items-center justify-center text-xl font-bold"
-        >
-          ✕
-        </button>
-
-        <img
-          src={food?.foodImg || food?.image}
-          alt={food?.title}
-          className="w-full h-48 md:h-64 object-cover"
-        />
-
-        <div className="p-6 space-y-4 overflow-y-auto flex-1">
-          <h2 className="text-2xl font-extrabold text-gray-900">
-            {food?.title || food?.foodName}
-          </h2>
-
-          <p className="text-xl font-bold text-orange-500">
-            <Translation en={`Tk ${price}`} bn={`৳ ${price}`} />
-          </p>
-
-          <p className="text-gray-600 text-sm">
-            <Translation
-              en={food?.description || "Delicious freshly prepared food."}
-              bn={food?.descriptionBn || "সুস্বাদু তাজা খাবার।"}
-            />
-          </p>
-
-          <hr />
-
-          <div>
-            <h3 className="font-semibold text-lg">
-              <Translation en="Special instructions" bn="বিশেষ নির্দেশনা" />
-            </h3>
-
-            <p className="text-xs text-gray-500 mb-3">
-              <Translation
-                en="Special requests are subject to restaurant approval."
-                bn="বিশেষ অনুরোধ রেস্টুরেন্টের অনুমতির উপর নির্ভরশীল।"
-              />
-            </p>
-
-            <textarea
-              placeholder="No mayo, extra spicy..."
-              className="w-full border rounded-xl p-3"
-            />
-          </div>
-        </div>
-
-        <div className="border-t p-5 flex items-center gap-4 bg-gray-50">
-          <div className="flex items-center border rounded-xl px-2 py-2">
-            <button onClick={decreaseQty} className="px-4 text-xl">
-              -
-            </button>
-
-            <span className="px-4 font-bold">{quantity}</span>
-
-            <button onClick={increaseQty} className="px-4 text-xl">
-              +
-            </button>
-          </div>
-
-          <button
-            onClick={handleAddToCart}
-            className="flex-1 bg-orange-600 text-white font-bold py-3 rounded-xl"
-          >
-            <Translation
-              en={`Add to cart • Tk ${price * quantity}`}
-              bn={`কার্টে যোগ করুন • ৳ ${price * quantity}`}
-            />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const ProductPage = () => {
   const { id } = useParams();
 
@@ -233,18 +123,16 @@ const ProductPage = () => {
     return acc;
   }, {});
 
-  // // Arrow scroll handlers
-  // const scrollLeft = () => {
-  //   scrollRef.current.scrollBy({ left: -150, behavior: "smooth" });
-  // };
-  // const scrollRight = () => {
-  //   scrollRef.current.scrollBy({ left: 150, behavior: "smooth" });
-  // };
+  const scrollRight = () =>
+    scrollRef.current?.scrollBy({ left: 900, behavior: "smooth" });
+
+  const scrollLeft = () =>
+    scrollRef.current?.scrollBy({ left: -900, behavior: "smooth" });
 
   if (loading)
     return (
-      <div className="p-10 text-center">
-        <Translation en="Loading details..." bn="ডেটা লোড হচ্ছে..." />
+      <div className="mt-10">
+        <FoodCardsSkeleton type="grid" count={9} />
       </div>
     );
 
@@ -257,19 +145,19 @@ const ProductPage = () => {
 
   return (
     <div className="pb-20 px-2 sm:px-4">
-      <RestaurantHero
-        foodImg={mainFood.foodImg || mainFood.image}
-        titleBn={mainFood.titleBn || mainFood.foodName}
-        title={mainFood.title || mainFood.foodName}
-        id={mainFood.id || mainFood._id}
-      />
+      <div className="bg-[#FCFCFC] pt-4">
+        <RestaurantHero
+          foodImg={mainFood.foodImg || mainFood.image}
+          title={mainFood.title || mainFood.foodName}
+          titleBn={mainFood.titleBn || mainFood.foodNameBn}
+          id={mainFood.id || mainFood._id}
+        />
+      </div>
 
-      <div className="py-5 max-w-[1380px] mx-auto relative">
-        <h2 className="text-2xl font-bold mb-6">
-          <Translation
-            en={`${categories.length} Food Categories`}
-            bn={`${categories.length} টি খাবারের ক্যাটাগরি`}
-          />
+      <div className="py-5 relative max-w-[1380px] mx-auto">
+        <h2 className="text-2xl font-bold text-gray-900 mb-6">
+          {categories.length}{" "}
+          <Translation en="Food Categories" bn="খাদ্য বিভাগ" />
         </h2>
 
         <div
@@ -277,8 +165,8 @@ const ProductPage = () => {
           className="flex gap-4 overflow-x-auto mb-10 pb-4 scroll-smooth"
         >
           {categories.map((cat, index) => {
-            const nameEn = cat.categoryName || cat.category;
-            const nameBn = cat.categoryNameBn || cat.categoryBn || nameEn;
+            const nameEn = cat.categoryName || cat.name;
+            const nameBn = cat.categoryBn || cat.nameBn;
 
             return (
               <CategoryCard
@@ -320,7 +208,7 @@ const ProductPage = () => {
       </div>
 
       {selectedFood && (
-        <FoodModal
+        <AddToCardModal
           food={selectedFood}
           quantity={quantity}
           setQuantity={setQuantity}

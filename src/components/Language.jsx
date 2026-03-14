@@ -3,32 +3,30 @@
 // import { useState, useRef, useEffect } from "react";
 // import { ChevronDown, Globe } from "lucide-react";
 // import { useLanguage } from "@/contexts/LanguageProvider";
-// // import { useLanguage } from "@/contexts/LanguageProvider";
 
 // const Language = () => {
-//   const { language, toggleLanguage } = useLanguage();
+//   const { language, setLanguage } = useLanguage();
 //   const [open, setOpen] = useState(false);
 //   const dropdownRef = useRef(null);
-//   const { language, setLanguage } = useLanguage();
 
-//   // Load language from localStorage when component mounts
 //   useEffect(() => {
 //     if (typeof window !== "undefined") {
 //       const savedLang = localStorage.getItem("language");
 //       if (savedLang && savedLang !== language) {
-//         toggleLanguage(savedLang); // set context language from localStorage
+//         toggleLanguage(savedLang);
 //       }
 //     }
-//   }, []);
+//   }, [language, setLanguage]);
 
-//   // Close dropdown when clicking outside
 //   useEffect(() => {
 //     const handleClickOutside = (event) => {
 //       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
 //         setOpen(false);
 //       }
 //     };
+
 //     document.addEventListener("mousedown", handleClickOutside);
+
 //     return () => {
 //       document.removeEventListener("mousedown", handleClickOutside);
 //     };
@@ -38,9 +36,10 @@
 //     if (language !== lang) {
 //       toggleLanguage(lang);
 //       if (typeof window !== "undefined") {
-//         localStorage.setItem("language", lang); // save selection
+//         localStorage.setItem("language", lang);
 //       }
 //     }
+
 //     setOpen(false);
 //   };
 
@@ -99,15 +98,16 @@ const Language = () => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Load language from localStorage
+  // Load saved language
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedLang = localStorage.getItem("language");
+
       if (savedLang && savedLang !== language) {
         setLanguage(savedLang);
       }
     }
-  }, [language, setLanguage]);
+  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -125,10 +125,12 @@ const Language = () => {
   }, []);
 
   const handleChangeLanguage = (lang) => {
-    setLanguage(lang);
+    if (language !== lang) {
+      setLanguage(lang);
 
-    if (typeof window !== "undefined") {
-      localStorage.setItem("language", lang);
+      if (typeof window !== "undefined") {
+        localStorage.setItem("language", lang);
+      }
     }
 
     setOpen(false);
@@ -142,7 +144,9 @@ const Language = () => {
         className="flex items-center gap-2 cursor-pointer text-sm hover:bg-gray-100 px-3 py-2 rounded-xl transition"
       >
         <Globe className="w-4 h-4" />
+
         {language === "en" ? "EN" : "বাং"}
+
         <ChevronDown
           className={`w-4 h-4 transition-transform duration-300 ${
             open ? "rotate-180" : ""

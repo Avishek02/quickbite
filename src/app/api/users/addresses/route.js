@@ -15,7 +15,6 @@ export async function GET(request) {
       );
     }
 
-    // FIX: Await the async dbConnect helper
     const collection = await dbConnect("addresses");
     const addresses = await collection.find({ email }).toArray();
 
@@ -47,7 +46,7 @@ export async function POST(request) {
       );
     }
 
-    // FIX: Await the async dbConnect helper
+    //Await the async dbConnect helper
     const collection = await dbConnect("addresses");
 
     const existingAddressesCount = await collection.countDocuments({ email });
@@ -89,7 +88,7 @@ export async function PUT(request) {
       );
     }
 
-    // FIX: Await the async dbConnect helper
+    //Await the async dbConnect helper
     const collection = await dbConnect("addresses");
 
     await collection.updateMany({ email }, { $set: { isDefault: false } });
@@ -131,7 +130,7 @@ export async function PATCH(request) {
       );
     }
 
-    // FIX: Await the async dbConnect helper
+    //Await the async dbConnect helper
     const collection = await dbConnect("addresses");
 
     for (const item of updates) {
@@ -166,7 +165,7 @@ export async function DELETE(request) {
       );
     }
 
-    // FIX: Await the async dbConnect helper
+    //  Await the async dbConnect helper
     const collection = await dbConnect("addresses");
 
     const result = await collection.deleteOne({ _id: new ObjectId(id) });

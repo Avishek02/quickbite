@@ -22,7 +22,6 @@ export default function DashboardHome() {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-
         <div className="bg-white shadow-md rounded-xl p-6 border">
           <h3 className="text-gray-500 text-sm">Total Users</h3>
           <p className="text-2xl font-bold mt-2">{stats.totalUsers}</p>
@@ -40,11 +39,8 @@ export default function DashboardHome() {
 
         <div className="bg-white shadow-md rounded-xl p-6 border">
           <h3 className="text-gray-500 text-sm">Total Revenue</h3>
-          <p className="text-2xl font-bold mt-2">
-            ${stats.totalRevenue}
-          </p>
+          <p className="text-2xl font-bold mt-2">${stats.totalRevenue}</p>
         </div>
-
       </div>
     </div>
   );

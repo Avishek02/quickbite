@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { Trash2, ShoppingBag } from "lucide-react";
+// import { ShoppingBag, Trash2 } from "react";
 import { useCart } from "@/contexts/CartContext";
 import Link from "next/link";
 import Translation from "@/components/Translation";
+import { ShoppingBag, Trash2 } from "lucide-react";
 
 export default function CartContent({ onClose, isDrawer = false }) {
   const { cartItems, removeFromCart } = useCart();
@@ -38,7 +39,6 @@ export default function CartContent({ onClose, isDrawer = false }) {
   // POPULATED STATE
   return (
     <div className={`flex flex-col ${isDrawer ? "h-full w-full" : "w-full"}`}>
-      {/* Items Section */}
       <div
         className={`bg-gray-50 ${isDrawer ? "flex-1 overflow-y-auto p-5" : "p-4"}`}
       >
@@ -55,22 +55,17 @@ export default function CartContent({ onClose, isDrawer = false }) {
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <h3 className="font-semibold text-gray-900 pr-6 leading-tight">
-                    <Translation
-                      en={item.title}
-                      bn={item.titleBn || item.title}
-                    />
+                    {item.title || item.titleBn}
                   </h3>
-
                   <button
                     onClick={() => removeFromCart(item.cartItemId)}
                     className="absolute right-4 top-4 text-red-400 hover:text-red-600 transition-colors p-1 cursor-pointer"
-                    title="Remove item"
+                    title={item.title ? "Remove item" : "আইটেম সরান"}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
 
-                {/* Render selected variations */}
                 <div className="mt-1">
                   {item.selectedVariations &&
                     Object.values(item.selectedVariations).map((variant, i) => {
@@ -80,14 +75,13 @@ export default function CartContent({ onClose, isDrawer = false }) {
                             key={`${i}-${j}`}
                             className="text-xs text-gray-500"
                           >
-                            + {v.name} {v.nameBn ? `(${v.nameBn})` : ""}
+                            + {v.nameBn || v.name}
                           </p>
                         ));
                       } else if (variant) {
                         return (
                           <p key={i} className="text-xs text-gray-500">
-                            + {variant.name}{" "}
-                            {variant.nameBn ? `(${variant.nameBn})` : ""}
+                            + {variant.nameBn || variant.name}
                           </p>
                         );
                       }
@@ -109,11 +103,7 @@ export default function CartContent({ onClose, isDrawer = false }) {
 
       {/* Footer Section */}
       <div
-        className={`bg-white border-t border-gray-100 ${
-          isDrawer
-            ? "p-5 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] shrink-0"
-            : "p-4"
-        }`}
+        className={`bg-white border-t border-gray-100 ${isDrawer ? "p-5 shadow-[0_-4px_10px_-1px_rgba(0,0,0,0.05)] shrink-0" : "p-4"}`}
       >
         <div className="flex justify-between items-center mb-4 text-lg font-extrabold text-gray-900">
           <span>
@@ -132,7 +122,7 @@ export default function CartContent({ onClose, isDrawer = false }) {
         >
           <Translation
             en="Review Payment and Checkout"
-            bn="পেমেন্ট পর্যালোচনা এবং চেকআউট"
+            bn="পেমেন্ট যাচাই এবং চেকআউট"
           />
         </Link>
       </div>

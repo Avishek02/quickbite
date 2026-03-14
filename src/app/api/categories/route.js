@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { dbConnect } from "@/lib/dbConnect";
-
 export const dynamic = "force-dynamic";
-
 export async function GET() {
   try {
     const categoryCollection = await dbConnect("categories");
@@ -11,7 +9,6 @@ export async function GET() {
     if (allCategories.length > 0) {
       return NextResponse.json(allCategories);
     }
-
     const foodsCollection = await dbConnect("allFoods");
 
     let uniqueTags = await foodsCollection.distinct("category");

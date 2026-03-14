@@ -26,7 +26,9 @@ export default function AddressesPage() {
   const fetchAddresses = async () => {
     if (session?.user?.email) {
       try {
-        const res = await fetch(`/api/users/addresses?email=${session.user.email}`);
+        const res = await fetch(
+          `/api/user/addresses?email=${session.user.email}`,
+        );
         const data = await res.json();
         if (data.success) {
           setAddresses(data.addresses);

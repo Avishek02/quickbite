@@ -18,12 +18,8 @@ export default async function AdminLayout({ children }) {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-orange-500">
-          Admin Dashboard
-        </h2>
-        <p className="text-gray-500">
-          Welcome, {session.user.name}
-        </p>
+        <h2 className="text-2xl font-bold text-orange-500">Admin Dashboard</h2>
+        <p className="text-gray-500">Welcome, {session.user.name}</p>
       </div>
 
       {children}

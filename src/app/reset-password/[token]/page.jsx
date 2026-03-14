@@ -13,14 +13,12 @@ export default function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
-    // FIX: Removed process.env.EMAIL_PASS which leaks secrets and breaks client-side routing
     const res = await fetch("/api/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, password }),
     });
-    
+
     const data = await res.json();
     setMessage(data.message);
     setLoading(false);
@@ -36,7 +34,9 @@ export default function ResetPassword() {
         className="bg-white p-6 rounded-lg shadow-md w-80"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-lg font-semibold mb-4 text-gray-900">Set New Password</h2>
+        <h2 className="text-lg font-semibold mb-4 text-gray-900">
+          Set New Password
+        </h2>
         <input
           type="password"
           placeholder="New password"
@@ -45,7 +45,7 @@ export default function ResetPassword() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button 
+        <button
           disabled={loading}
           className="w-full bg-orange-500 hover:bg-orange-600 transition text-white py-2 rounded-md cursor-pointer disabled:bg-gray-400"
         >

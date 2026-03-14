@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Link from "next/link"; // FIX: Was wrongly imported from lucide-react by the team
+import Link from "next/link";
 import SocialLogin from "@/components/SocialLogin";
 import Swal from "sweetalert2";
 
@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // If already logged in → redirect home
   useEffect(() => {
     if (status === "authenticated") {
       router.push("/");

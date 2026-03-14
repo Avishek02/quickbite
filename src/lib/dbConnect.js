@@ -28,6 +28,5 @@ export const dbConnect = async (collectionName) => {
   const connectedClient = await clientPromise;
   const db = connectedClient.db(dbName);
   return db.collection(collectionName);
-};
-
+}
 export default clientPromise;

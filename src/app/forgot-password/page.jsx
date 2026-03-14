@@ -8,14 +8,13 @@ export default function ForgotPassword() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // FIX: Use relative path. Do not use process.env.EMAIL_PASS here!
+
     const res = await fetch("/api/forgot-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     });
-    
+
     const data = await res.json();
     setMessage(data.message);
   };
