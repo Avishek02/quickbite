@@ -1,0 +1,132 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+export default function UsersTable() {
+  const [users, setUsers] = useState([]);
+
+  // Fetch users from your API
+  const fetchUsers = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`);
+      if (!res.ok) throw new Error("Failed to fetch users");
+      const data = await res.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setUsers([]); // reset users on error
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleMakeAdmin = async (id) => {
+    try {
+      await fetch("/api/users", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      fetchUsers();
+    } catch (error) {
+      console.error("Failed to make admin:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const confirmDelete = confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+
+    try {
+      await fetch("/api/users", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      fetchUsers();
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-8">
+      <div className="max-w-6xl mx-auto bg-white shadow-lg rounded-2xl p-8">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-800">Users Management</h2>
+          <span className="text-sm text-gray-500">
+            Total Users: {users.length}
+          </span>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-gray-50 border-b">
+                <th className="py-4 px-4 font-semibold text-gray-600">Name</th>
+                <th className="py-4 px-4 font-semibold text-gray-600">Email</th>
+                <th className="py-4 px-4 font-semibold text-gray-600">Role</th>
+                <th className="py-4 px-4 font-semibold text-gray-600 text-center">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {users?.map((user) => (
+                <tr
+                  key={user._id}
+                  className="border-b hover:bg-gray-50 transition duration-200"
+                >
+                  <td className="py-4 px-4 text-gray-700 font-medium">
+                    {user?.name}
+                  </td>
+                  <td className="py-4 px-4 text-gray-600">{user?.email}</td>
+                  <td className="py-4 px-4">
+                    <span
+                      className={`px-3 py-1 text-xs font-semibold rounded-full ${
+                        user?.role === "admin"
+                          ? "bg-green-100 text-green-600"
+                          : "bg-blue-100 text-blue-600"
+                      }`}
+                    >
+                      {user?.role || "user"}
+                    </span>
+                  </td>
+                  <td className="py-4 px-4 text-center space-x-2">
+                    {user?.role !== "admin" && (
+                      <button
+                        onClick={() => handleMakeAdmin(user._id)}
+                        className="bg-green-500 hover:bg-green-600 text-white text-sm px-4 py-2 rounded-lg transition duration-200"
+                      >
+                        Make Admin
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleDelete(user._id)}
+                      className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-lg transition duration-200"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+
+              {users.length === 0 && (
+                <tr>
+                  <td colSpan="4" className="text-center py-8 text-gray-400">
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
